@@ -1,0 +1,416 @@
+/* ==========================================================================
+   pwn.notes — playful dark hacker theme
+   Neon accents, lively cards, readable code. Layered on Material for MkDocs.
+   ========================================================================== */
+
+:root {
+  --pwn-neon:      #39ff14;   /* signature terminal green */
+  --pwn-cyan:      #22d3ee;
+  --pwn-magenta:   #ff2e97;
+  --pwn-amber:     #ffb020;
+  --pwn-purple:    #a855f7;
+}
+
+/* ---- Accent + link tuning (dark scheme) -------------------------------- */
+[data-md-color-scheme="slate"] {
+  --md-accent-fg-color: var(--pwn-neon);
+  --md-typeset-a-color: var(--pwn-cyan);
+  --md-default-bg-color: #0d1117;
+  --md-code-bg-color: #161b22;
+  --md-code-fg-color: #e6edf3;
+}
+
+[data-md-color-scheme="slate"] .md-header,
+[data-md-color-scheme="slate"] .md-tabs {
+  background: linear-gradient(90deg, #0d1117 0%, #131a24 60%, #0d1117 100%);
+  border-bottom: 1px solid rgba(57, 255, 20, 0.18);
+}
+
+/* Subtle scanline glow behind the whole page for "lively" feel */
+[data-md-color-scheme="slate"] .md-main {
+  background-image:
+    radial-gradient(circle at 12% -10%, rgba(34, 211, 238, 0.06), transparent 40%),
+    radial-gradient(circle at 90% 0%, rgba(168, 85, 247, 0.06), transparent 35%);
+}
+
+/* ---- Header title gets a neon flicker on the ghost ---------------------- */
+.md-header__title {
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+[data-md-color-scheme="slate"] .md-header__button.md-logo svg {
+  filter: drop-shadow(0 0 6px var(--pwn-neon));
+}
+
+/* ==========================================================================
+   Grid cards — the "level select" for each topic
+   ========================================================================== */
+.md-typeset .grid.cards > ul > li,
+.md-typeset .grid > .card {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.md-typeset .grid.cards > ul > li:hover {
+  transform: translateY(-4px);
+  border-color: var(--pwn-neon);
+  box-shadow: 0 8px 28px rgba(57, 255, 20, 0.18);
+}
+
+/* Give each card's leading emoji a little pop */
+.md-typeset .grid.cards > ul > li > p:first-child > .twemoji,
+.md-typeset .grid.cards .twemoji svg {
+  height: 1.4em;
+  width: 1.4em;
+}
+
+/* ==========================================================================
+   Difficulty / status pills — used inline via {: .pill .pill-... }
+   ========================================================================== */
+.md-typeset .pill {
+  display: inline-block;
+  padding: 0.12em 0.6em;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  line-height: 1.6;
+  vertical-align: middle;
+}
+.md-typeset .pill-easy   { background: rgba(57, 255, 20, 0.15);  color: var(--pwn-neon);    border: 1px solid var(--pwn-neon); }
+.md-typeset .pill-medium { background: rgba(255, 176, 32, 0.15); color: var(--pwn-amber);   border: 1px solid var(--pwn-amber); }
+.md-typeset .pill-hard   { background: rgba(255, 46, 151, 0.15); color: var(--pwn-magenta); border: 1px solid var(--pwn-magenta); }
+.md-typeset .pill-info   { background: rgba(34, 211, 238, 0.15); color: var(--pwn-cyan);    border: 1px solid var(--pwn-cyan); }
+
+/* ==========================================================================
+   Code blocks — terminal look, glow on the copy affordance
+   ========================================================================== */
+[data-md-color-scheme="slate"] .md-typeset pre > code {
+  border-radius: 10px;
+  border: 1px solid rgba(57, 255, 20, 0.14);
+}
+[data-md-color-scheme="slate"] .md-typeset .highlight:hover pre > code {
+  border-color: rgba(57, 255, 20, 0.4);
+}
+
+/* Fake terminal traffic-lights on fenced blocks that have a title */
+.md-typeset .highlight span.filename {
+  background: #131a24;
+  border-radius: 10px 10px 0 0;
+  border-bottom: 1px solid rgba(57, 255, 20, 0.14);
+  color: var(--pwn-cyan);
+  font-family: var(--md-code-font-family);
+  font-size: 0.72rem;
+  letter-spacing: 0.4px;
+}
+
+/* Inline code pops a touch more */
+[data-md-color-scheme="slate"] .md-typeset code {
+  color: var(--pwn-neon);
+  background: rgba(57, 255, 20, 0.08);
+}
+[data-md-color-scheme="slate"] .md-typeset a code {
+  color: var(--pwn-cyan);
+  background: rgba(34, 211, 238, 0.08);
+}
+
+/* ==========================================================================
+   Admonitions — brighter, more "gamey" edges
+   ========================================================================== */
+.md-typeset .admonition,
+.md-typeset details {
+  border-radius: 10px;
+  border-left-width: 4px;
+}
+[data-md-color-scheme="slate"] .md-typeset .admonition:hover {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+/* Custom "loot" admonition for high-value findings */
+.md-typeset .admonition.loot,
+.md-typeset details.loot {
+  border-color: var(--pwn-amber);
+}
+.md-typeset .loot > .admonition-title,
+.md-typeset .loot > summary {
+  background: rgba(255, 176, 32, 0.12);
+}
+.md-typeset .loot > .admonition-title::before,
+.md-typeset .loot > summary::before {
+  background-color: var(--pwn-amber);
+  -webkit-mask-image: var(--md-admonition-icon--example);
+          mask-image: var(--md-admonition-icon--example);
+}
+
+/* Custom "opsec" admonition for detection/noise warnings */
+.md-typeset .admonition.opsec,
+.md-typeset details.opsec {
+  border-color: var(--pwn-magenta);
+}
+.md-typeset .opsec > .admonition-title,
+.md-typeset .opsec > summary {
+  background: rgba(255, 46, 151, 0.12);
+}
+.md-typeset .opsec > .admonition-title::before,
+.md-typeset .opsec > summary::before {
+  background-color: var(--pwn-magenta);
+  -webkit-mask-image: var(--md-admonition-icon--danger);
+          mask-image: var(--md-admonition-icon--danger);
+}
+
+/* ==========================================================================
+   Tables — zebra + neon header
+   ========================================================================== */
+[data-md-color-scheme="slate"] .md-typeset table:not([class]) th {
+  background: #131a24;
+  color: var(--pwn-cyan);
+  border-bottom: 2px solid rgba(34, 211, 238, 0.3);
+}
+[data-md-color-scheme="slate"] .md-typeset table:not([class]) tr:hover {
+  background: rgba(57, 255, 20, 0.04);
+}
+
+/* ==========================================================================
+   Tags — chip styling on the tags index & per-page
+   ========================================================================== */
+.md-typeset .md-tag {
+  border-radius: 999px;
+  font-weight: 600;
+}
+[data-md-color-scheme="slate"] .md-typeset .md-tag:hover {
+  color: var(--pwn-neon);
+}
+
+/* ==========================================================================
+   Home hero
+   ========================================================================== */
+.pwn-hero {
+  text-align: center;
+  padding: 2.2rem 1rem 1.2rem;
+  border-radius: 16px;
+  margin-bottom: 1.4rem;
+  background:
+    linear-gradient(120deg, rgba(57,255,20,0.08), rgba(34,211,238,0.08) 50%, rgba(168,85,247,0.08));
+  border: 1px solid rgba(57, 255, 20, 0.18);
+}
+.pwn-hero h1 {
+  margin: 0;
+  font-size: 2.6rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, var(--pwn-neon), var(--pwn-cyan), var(--pwn-purple));
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.pwn-hero p { opacity: 0.85; margin: 0.4rem 0 0; }
+.pwn-blink { animation: pwn-blink 1.1s steps(2, start) infinite; color: var(--pwn-neon); }
+@keyframes pwn-blink { to { visibility: hidden; } }
+
+/* ==========================================================================
+   Konami-code CRT easter egg
+   extra.js toggles <body class="pwn-crt"> on ↑↑↓↓←→←→BA.
+   Old-monitor look: green phosphor tint, scanlines, vignette, flicker.
+   Overlays are pointer-events:none so the site stays fully usable.
+   ========================================================================== */
+body.pwn-crt {
+  /* Green-phosphor CRT grade over the whole page */
+  filter: contrast(1.05) brightness(1.03) saturate(1.15) sepia(0.12) hue-rotate(58deg);
+  animation: pwn-crt-flicker 90ms steps(2, end) infinite;
+}
+
+/* Static scanlines + faint horizontal RGB mask */
+body.pwn-crt::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 0,
+      rgba(0, 0, 0, 0) 1px,
+      rgba(0, 0, 0, 0.22) 2px,
+      rgba(0, 0, 0, 0.22) 3px
+    ),
+    repeating-linear-gradient(
+      to right,
+      rgba(255, 0, 0, 0.05),
+      rgba(0, 255, 0, 0.02) 33%,
+      rgba(0, 0, 255, 0.05) 66%
+    );
+  mix-blend-mode: multiply;
+}
+
+/* Curved-tube vignette + a slow bright scan sweeping down the screen */
+body.pwn-crt::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 2001;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.45) 100%),
+    linear-gradient(rgba(57, 255, 20, 0.10), rgba(57, 255, 20, 0) 12%);
+  background-repeat: no-repeat, no-repeat;
+  background-size: 100% 100%, 100% 18%;
+  animation: pwn-crt-scan 7s linear infinite;
+}
+
+/* Chromatic-aberration ghosting on the main content text */
+body.pwn-crt .md-content {
+  text-shadow:
+    0.6px 0 rgba(255, 0, 60, 0.35),
+    -0.6px 0 rgba(0, 200, 255, 0.35);
+}
+
+@keyframes pwn-crt-flicker {
+  0%   { opacity: 1;    }
+  50%  { opacity: 0.97; }
+  100% { opacity: 0.99; }
+}
+@keyframes pwn-crt-scan {
+  from { background-position: 0 0,    0 -20%; }
+  to   { background-position: 0 0,    0 120%; }
+}
+
+/* ==========================================================================
+   Lite search — a visible floating "Search" button + overlay (search-lite.js).
+   Works on http(s) and file://; complements Material's header search.
+   ========================================================================== */
+.pwn-search-fab {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 1500;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  padding: 0.6em 1em;
+  border: 1px solid var(--pwn-neon);
+  border-radius: 999px;
+  background: rgba(13, 17, 23, 0.92);
+  color: var(--pwn-neon);
+  font: 700 0.8rem/1 var(--md-text-font-family, inherit);
+  letter-spacing: 0.4px;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(57, 255, 20, 0.22);
+  transition: transform 140ms ease, box-shadow 140ms ease, background 140ms ease;
+}
+.pwn-search-fab:hover {
+  transform: translateY(-2px);
+  background: rgba(57, 255, 20, 0.12);
+  box-shadow: 0 10px 28px rgba(57, 255, 20, 0.35);
+}
+[data-md-color-scheme="default"] .pwn-search-fab {
+  background: #ffffff;
+  color: #00695c;
+  border-color: #00897b;
+  box-shadow: 0 6px 20px rgba(0, 137, 123, 0.25);
+}
+
+.pwn-search-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1600;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 8vh 1rem 1rem;
+  background: rgba(5, 8, 12, 0.72);
+  backdrop-filter: blur(3px);
+}
+.pwn-search-overlay[hidden] { display: none; }
+
+.pwn-search-modal {
+  width: min(680px, 100%);
+  max-height: 78vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--md-default-bg-color, #0d1117);
+  border: 1px solid rgba(57, 255, 20, 0.35);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+}
+.pwn-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.85em 1em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--pwn-cyan);
+}
+.pwn-search-input {
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--md-default-fg-color, #e6edf3);
+  font-size: 1rem;
+}
+.pwn-search-esc {
+  font-size: 0.7rem;
+  padding: 0.15em 0.5em;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  opacity: 0.7;
+}
+.pwn-search-meta {
+  padding: 0.5em 1.1em;
+  font-size: 0.72rem;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+.pwn-search-results {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0.4rem;
+  overflow-y: auto;
+}
+.pwn-search-results li { margin: 0; }
+.pwn-search-result {
+  display: block;
+  padding: 0.7em 1.1em;
+  border-left: 3px solid transparent;
+  text-decoration: none;
+  color: inherit;
+}
+.pwn-search-result:hover,
+.pwn-search-result.is-active {
+  background: rgba(57, 255, 20, 0.08);
+  border-left-color: var(--pwn-neon);
+}
+.pwn-search-title {
+  display: block;
+  font-weight: 700;
+  color: var(--pwn-cyan);
+  margin-bottom: 0.2em;
+}
+.pwn-search-snip {
+  display: block;
+  font-size: 0.82rem;
+  opacity: 0.8;
+  line-height: 1.4;
+}
+.pwn-search-snip mark {
+  background: rgba(255, 176, 32, 0.25);
+  color: var(--pwn-amber);
+  padding: 0 0.1em;
+  border-radius: 3px;
+}
+body.pwn-search-open { overflow: hidden; }
+
+/* Respect reduced-motion users */
+@media (prefers-reduced-motion: reduce) {
+  .md-typeset .grid.cards > ul > li:hover { transform: none; }
+  .pwn-blink { animation: none; }
+  .pwn-search-fab:hover { transform: none; }
+  /* Keep the CRT *look* (scanlines/vignette/tint) but drop the motion. */
+  body.pwn-crt { animation: none; }
+  body.pwn-crt::after { animation: none; }
+}

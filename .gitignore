@@ -1,0 +1,7 @@
+site/
+# Generated at build time by hooks/gen_search_data.py
+docs/javascripts/search-data.js
+__pycache__/
+*.pyc
+.venv/
+.cache/

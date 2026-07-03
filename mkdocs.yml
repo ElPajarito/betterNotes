@@ -1,0 +1,210 @@
+site_name: pwn.notes
+site_description: A lively, searchable field manual for pentesters — web, cloud, network/AD, privesc & post-exploitation.
+site_author: pwn.notes
+# Update site_url + repo_url to your fork before deploying to GitHub Pages.
+site_url: https://ElPajarito.github.io/betterNotes/
+repo_url: https://github.com/ElPajarito/betterNotes
+repo_name: betterNotes
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  language: en
+  font:
+    text: Inter
+    code: JetBrains Mono
+  icon:
+    logo: material/ghost
+    repo: fontawesome/brands/github
+    tag:
+      web: material/spider-web
+      cloud: material/cloud
+      network: material/lan
+      privesc: material/key-chain
+      recon: material/radar
+      windows: material/microsoft-windows
+      linux: material/linux
+      default: material/tag
+  palette:
+    # Dark is the default (playful dark hacker vibe), with a light toggle.
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: green
+      toggle:
+        icon: material/weather-night
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to dark mode
+  features:
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - navigation.indexes
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - content.tooltips
+
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/extra.js
+  # Self-contained "lite" search: data first, then the UI. Works on file:// too.
+  - javascripts/search-data.js
+  - javascripts/search-lite.js
+
+# Generates javascripts/search-data.js from the notes on every build.
+hooks:
+  - hooks/gen_search_data.py
+
+extra:
+  tags:
+    Web: web
+    Cloud: cloud
+    Network: network
+    Privesc: privesc
+    Recon: recon
+    Windows: windows
+    Linux: linux
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/example/betterNotes
+    - icon: fontawesome/solid/shield-halved
+      link: https://owasp.org
+  generator: false
+
+plugins:
+  - search:
+      separator: '[\s\-,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
+  - tags
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: "¶"
+      permalink_title: Anchor link to this section
+      title: On this page
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+      use_pygments: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.smartsymbols
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+nav:
+  - Home: index.md
+  - Web Apps:
+      - web/index.md
+      - Injection:
+          - SQL Injection: web/sqli.md
+          - NoSQL Injection: web/nosql-injection.md
+          - Command Injection: web/command-injection.md
+          - LDAP Injection: web/ldap-injection.md
+          - XXE: web/xxe.md
+          - SSTI: web/ssti.md
+          - GraphQL: web/graphql.md
+      - Auth & Sessions:
+          - Auth Bypass: web/auth-bypass.md
+          - JWT Attacks: web/jwt.md
+          - OAuth & SAML: web/oauth-saml.md
+      - Client-Side:
+          - XSS: web/xss.md
+          - CSRF: web/csrf.md
+          - CORS Misconfig: web/cors.md
+          - Clickjacking: web/clickjacking.md
+          - Prototype Pollution: web/prototype-pollution.md
+      - Server-Side:
+          - SSRF: web/ssrf.md
+          - File Upload: web/file-upload.md
+          - Deserialization: web/deserialization.md
+          - Open Redirect: web/open-redirect.md
+          - Request Smuggling: web/request-smuggling.md
+          - Web Cache Poisoning: web/web-cache-poisoning.md
+          - Race Conditions: web/race-conditions.md
+  - Cloud:
+      - cloud/index.md
+      - Providers:
+          - AWS: cloud/aws.md
+          - Azure: cloud/azure.md
+          - GCP: cloud/gcp.md
+      - Containers & Pipelines:
+          - Kubernetes: cloud/kubernetes.md
+          - Container Escape: cloud/containers.md
+          - CI/CD & Supply Chain: cloud/cicd.md
+  - Network / AD:
+      - network/index.md
+      - Recon:
+          - Recon: network/recon.md
+          - DNS: network/dns.md
+      - Services:
+          - SMB: network/smb.md
+          - MSSQL: network/mssql.md
+      - Active Directory:
+          - Kerberos: network/kerberos.md
+          - Active Directory: network/active-directory.md
+          - Coercion & NTLM Relay: network/ntlm-relay.md
+          - AD CS (ESC): network/adcs.md
+          - Password Spraying: network/password-spraying.md
+          - BloodHound: network/bloodhound.md
+  - Privesc & Post-Ex:
+      - privesc/index.md
+      - Linux:
+          - Linux Privesc: privesc/linux.md
+          - GTFOBins & SUID: privesc/gtfobins.md
+      - Windows:
+          - Windows Privesc: privesc/windows.md
+          - Token & Privilege Abuse: privesc/windows-tokens.md
+      - Post-Exploitation:
+          - Credential Hunting: privesc/credential-hunting.md
+          - Persistence: privesc/persistence.md
+          - Pivoting & Exfil: privesc/pivoting.md
+  - Tags: tags.md
