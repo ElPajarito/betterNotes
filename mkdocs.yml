@@ -2,7 +2,7 @@ site_name: pwn.notes
 site_description: A lively, searchable field manual for pentesters — web, cloud, network/AD, privesc & post-exploitation.
 site_author: pwn.notes
 # Update site_url + repo_url to your fork before deploying to GitHub Pages.
-site_url: https://ElPajarito.github.io/betterNotes/
+site_url: https://elpajarito.github.io/betterNotes/
 repo_url: https://github.com/ElPajarito/betterNotes
 repo_name: betterNotes
 edit_uri: edit/main/docs/
