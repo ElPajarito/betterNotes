@@ -16,41 +16,59 @@ Web · Cloud · Network/AD · Privesc & Post-Exploitation — hit the **Search**
 !!! warning "Authorized testing only"
     Everything here is written for **CTFs, labs, and engagements you have written permission to test**. Running these techniques against systems you don't own or aren't scoped to test is illegal. Be a professional. :material-shield-check:
 
-## :material-map-marker-path: Pick a level
+## :material-map-marker-path: Follow the kill chain
+
+The notes are ordered the way an engagement actually runs — **Recon → Enumeration → Exploitation → Post-Ex** — with **Mobile** and a general **Toolbox** off to the side.
 
 <div class="grid cards" markdown>
 
--   :material-spider-web:{ .lg .middle } __Web Apps__
+-   :material-radar:{ .lg .middle } __1 · Recon__
 
     ---
 
-    Injection, XSS, SSRF, broken auth, unsafe uploads, and deserialization. The bread and butter of app testing.
+    Map the ground before you touch it: host discovery, port scanning, DNS, and the internal/AD overview.
 
-    [:octicons-arrow-right-24: Enter world 1](web/index.md)
+    [:octicons-arrow-right-24: Start scanning](network/recon.md)
 
--   :material-cloud:{ .lg .middle } __Cloud__
-
-    ---
-
-    AWS, Azure, and GCP — enumeration, IAM privilege escalation, metadata SSRF, and storage misconfigurations.
-
-    [:octicons-arrow-right-24: Enter world 2](cloud/index.md)
-
--   :material-lan:{ .lg .middle } __Network / AD__
+-   :material-magnify-scan:{ .lg .middle } __2 · Enumeration__
 
     ---
 
-    Recon, SMB, Kerberos, and full Active Directory attack paths from foothold to Domain Admin.
+    Go deep on what you found — SMB, MSSQL, and cloud tenants (AWS/Azure/GCP) — to surface the soft targets.
 
-    [:octicons-arrow-right-24: Enter world 3](network/index.md)
+    [:octicons-arrow-right-24: Enumerate services](network/smb.md)
 
--   :material-key-chain:{ .lg .middle } __Privesc & Post-Ex__
+-   :material-sword-cross:{ .lg .middle } __3 · Exploitation__
 
     ---
 
-    Linux & Windows local privilege escalation, persistence, pivoting, and exfiltration.
+    The attacks: web (injection, XSS, SSRF…), Active Directory attack paths, and container/CI-CD escapes.
 
-    [:octicons-arrow-right-24: Enter world 4](privesc/index.md)
+    [:octicons-arrow-right-24: Break in](web/index.md)
+
+-   :material-key-chain:{ .lg .middle } __4 · Post-Exploitation__
+
+    ---
+
+    Turn a foothold into full control: Linux & Windows privesc, credential hunting, persistence, and pivoting.
+
+    [:octicons-arrow-right-24: Escalate & pivot](privesc/index.md)
+
+-   :material-cellphone-lock:{ .lg .middle } __5 · Mobile__
+
+    ---
+
+    Android & iOS: decompile the app, beat SSL pinning, hook the runtime, and attack the API behind it.
+
+    [:octicons-arrow-right-24: Go mobile](mobile/index.md)
+
+-   :material-toolbox:{ .lg .middle } __Toolbox__
+
+    ---
+
+    The baseline kit every phase assumes: Linux commands, text-fu, networking, transfer, and troubleshooting.
+
+    [:octicons-arrow-right-24: Grab your kit](toolbox/index.md)
 
 </div>
 
@@ -99,5 +117,5 @@ Notes use a consistent vocabulary so you can skim fast:
 ---
 
 <p style="text-align:center; opacity:0.6;">
-Made with :material-heart:{ .pwn-blink } and too much coffee. Try the <kbd>↑ ↑ ↓ ↓ ← → ← → B A</kbd> code. 🍄
+Made with :material-heart:{ .pwn-blink } and too much coffee. Try the <kbd>↑ ↑ ↓ ↓ ← → ← → B A</kbd> code. <span title="?" style="cursor:pointer" onclick="window.pwnWarp&&window.pwnWarp()">🍄</span>
 </p>

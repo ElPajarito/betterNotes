@@ -109,6 +109,56 @@ klist                                  # confirm
 sudo ntpdate 10.10.10.5   # or: faketime, rdate
 ```
 
+## :material-alert-decagram: Edge cases & gotchas
+
+!!! bug "The three things that break Kerberos from Linux"
+    Almost every "it just won't work" moment is one of these:
+
+    1. **Clock skew** — `KRB_AP_ERR_SKEW` means >5 min drift from the DC. Sync to
+       the *DC*, not `pool.ntp.org`: `sudo ntpdate <DC-IP>` (or `faketime` /
+       `rdate -n <DC>`). On a locked-down box, `nxc … --ntp` or just retry after
+       `timedatectl`.
+    2. **Names, not IPs** — Kerberos authenticates *SPNs*, which are hostnames.
+       `psexec.py -k dc01.corp.local` works; `-k 10.10.10.5` gives
+       `KRB_AP_ERR_S_PRINCIPAL_UNKNOWN`. Add the DC + target to `/etc/hosts` and
+       always use the FQDN.
+    3. **Ticket format mismatch** — Impacket uses `.ccache` (`KRB5CCNAME`), Rubeus
+       uses `.kirbi`. Convert with `ticketConverter.py in.kirbi out.ccache` (and
+       back). Forgetting this looks like "the ticket is ignored."
+
+=== "Encryption types (etype)"
+
+    - Roastable hashes come as **RC4 (etype 23, `$krb5tgs$23$`)** — fast to crack —
+      or **AES (17/18, `$…$18$`)** — much slower. Modern DCs may only issue AES.
+    - **AS-REP/Kerberoast AES** still cracks, just budget more time; don't skip an
+      account because it's AES.
+    - **Golden/Silver tickets:** forge with the **AES key** (`-aesKey`) not the NT
+      hash where possible — an RC4-encrypted TGT on an AES-only domain is an
+      **encryption-downgrade** signal defenders hunt for (a.k.a. why "Diamond" and
+      "Sapphire" tickets exist — they modify a *real* ticket instead of forging).
+
+=== "Targeted Kerberoast"
+
+    No SPN on your target account but you have `GenericWrite`/`GenericAll` over it?
+    **Set an SPN, roast, then remove it:**
+    ```bash
+    targetedKerberoast.py -v -d corp.local -u bob -p Pass
+    # or manually: set servicePrincipalName -> GetUserSPNs -request -> clear it
+    ```
+
+=== "Double-hop problem"
+
+    A PtT/WinRM session can't forward its Kerberos creds to a *second* remote hop
+    (no TGT in the session) — you get access denied reaching a third machine. Fixes:
+    use `-k` with a fresh TGT, CredSSP, or a full S4U/RBCD chain instead of relying
+    on the landed session.
+
+!!! opsec "Downgrade & forgery are loud"
+    RC4 tickets in an AES environment, TGTs with a 10-year lifetime (default
+    `ticketer.py`!), and mismatched PAC timestamps all light up modern detections.
+    Set a realistic `-duration`, prefer AES keys, and prefer Silver/Sapphire over
+    Golden when you only need one service.
+
 ## :material-shield-check: Remediation
 
 - Long (25+ char) managed passwords / gMSA for service accounts.

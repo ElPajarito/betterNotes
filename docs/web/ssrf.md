@@ -109,6 +109,71 @@ http://127.0.0.1:8080/   # internal admin panels
 http://127.0.0.1:2375/   # Docker API -> container escape
 ```
 
+## :material-alert-decagram: Edge cases & gotchas
+
+=== "Blind SSRF"
+
+    No response body reflected? You can still win:
+
+    - **Timing oracle** — an open internal port responds fast; a filtered one
+      hangs to timeout. Diff the response times to port-scan.
+    - **Force an interaction** — point it at cloud metadata and exfil via a
+      *second* SSRF hop, or use `gopher://` to fire a complete request blind.
+    - **Error-message leaks** — "connection refused" vs "no route to host" vs a
+      TLS error each tell you something about the target.
+
+=== "gopher:// → RCE"
+
+    `gopher://` lets you write raw bytes to a TCP socket — turn blind SSRF into a
+    crafted request against an unauthenticated internal service. Classic: drop a
+    cron job via Redis.
+
+    ```text
+    gopher://127.0.0.1:6379/_%0D%0ASET%20x%20"...cronjob..."%0D%0ACONFIG%20SET%20dir%20/var/spool/cron%0D%0ACONFIG%20SET%20dbfilename%20root%0D%0ASAVE%0D%0A
+    ```
+
+    URL-encode CRLFs as `%0D%0A`. `gopherus` generates these payloads for
+    Redis / MySQL / SMTP / FastCGI (php-fpm → RCE).
+
+=== "More metadata endpoints"
+
+    | Cloud | Endpoint | Required header |
+    | --- | --- | --- |
+    | AWS | `169.254.169.254/latest/meta-data/` | none (v1) / token (v2) |
+    | GCP | `metadata.google.internal/computeMetadata/v1/` | `Metadata-Flavor: Google` |
+    | Azure | `169.254.169.254/metadata/instance` | `Metadata: true` |
+    | DigitalOcean | `169.254.169.254/metadata/v1/` | none |
+    | Oracle OCI | `169.254.169.254/opc/v2/instance/` | `Authorization: Bearer Oracle` |
+    | Alibaba | `100.100.100.200/latest/meta-data/` | none |
+
+    GCP/Azure/Oracle need a **custom header** — a pure `url=` SSRF can't reach
+    them unless the fetcher also lets you inject headers (or you chain CRLF
+    injection).
+
+!!! bug "Why the filter bypass isn't working"
+    - **The app re-resolves DNS** between its check and its fetch — that's the
+      DNS-rebinding window. If it validates the *literal string* instead, a decimal
+      or hex IP slips through; if it validates the *resolved IP once*, rebinding
+      (TTL 0) beats it.
+    - **`http://expected@169.254.169.254/`** — some parsers read the host as
+      `expected`, some as the metadata IP. Try both orderings and the `#@` variant.
+    - **Redirects:** if the fetcher follows 3xx, host a `/redirect` that 302s to
+      the internal target — the *first* URL passes the allowlist. Break this by
+      disabling redirects server-side.
+    - **IPv6:** `[::1]`, `[::ffff:169.254.169.254]` (IPv4-mapped), and
+      `[0:0:0:0:0:ffff:a9fe:a9fe]` dodge IPv4-only blocklists.
+    - **`0.0.0.0`** often routes to localhost on Linux and is missed by blocklists
+      that only list `127.0.0.1`.
+    - **CRLF in the URL** (`%0d%0a`) can inject extra headers or smuggle a second
+      request into the fetcher.
+
+!!! tip "PDF / screenshot renderers"
+    HTML-to-PDF (wkhtmltopdf, headless Chrome) fetch resources *at render time*.
+    Inject `<iframe src="http://169.254.169.254/...">`, `<img>`, or
+    `<script>fetch('file:///etc/passwd').then(...)</script>` into any field that
+    lands in the generated document — the render engine is your SSRF client, often
+    with `file://` access.
+
 ## :material-shield-check: Remediation
 
 - Allowlist destinations; resolve + validate the IP **after** DNS (guard against rebinding).

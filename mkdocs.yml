@@ -21,32 +21,192 @@ theme:
       cloud: material/cloud
       network: material/lan
       privesc: material/key-chain
+      mobile: material/cellphone
       recon: material/radar
       windows: material/microsoft-windows
       linux: material/linux
+      reference: material/toolbox
       default: material/tag
   palette:
-    # Dark is the default (playful dark hacker vibe), with a light toggle.
-    - media: "(prefers-color-scheme: dark)"
-      scheme: slate
-      primary: black
-      accent: green
+    # Curated palettes — the header toggle cycles through them (first = default).
+    # The `primary` value is the CSS hook each palette's colors are keyed on
+    # (see docs/stylesheets/extra.css). Don't reuse a primary within a scheme.
+    - scheme: slate            # Nocturne — calm indigo night (default)
+      primary: indigo
+      accent: indigo
       toggle:
         icon: material/weather-night
-        name: Switch to light mode
-    - media: "(prefers-color-scheme: light)"
-      scheme: default
+        name: "Nocturne — next palette"
+    - scheme: slate            # Eclipse — soft mauve on deep charcoal
+      primary: purple
+      accent: purple
+      toggle:
+        icon: material/moon-waning-crescent
+        name: "Eclipse — next palette"
+    - scheme: slate            # Forest — muted, natural greens
+      primary: green
+      accent: green
+      toggle:
+        icon: material/pine-tree
+        name: "Forest — next palette"
+    - scheme: slate            # Ember — warm, cozy amber/orange
+      primary: orange
+      accent: orange
+      toggle:
+        icon: material/fire
+        name: "Ember — next palette"
+    - scheme: slate            # Plum — moody midnight jewel tones
+      primary: red
+      accent: red
+      toggle:
+        icon: material/diamond-stone
+        name: "Plum — next palette"
+    - scheme: slate            # Academia — vintage sepia, cream & old gold
+      primary: brown
+      accent: brown
+      toggle:
+        icon: material/book-open-variant
+        name: "Academia — next palette"
+    - scheme: slate            # Future Dusk — atmospheric blue-violet (WGSN 2025)
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/weather-night-partly-cloudy
+        name: "Future Dusk — next palette"
+    - scheme: slate            # Transformative Teal — blue-aqua fusion (WGSN 2026 CotY)
       primary: teal
       accent: teal
       toggle:
+        icon: material/waves
+        name: "Transformative Teal — next palette"
+    - scheme: slate            # Terminal — the original neon-green hacker look
+      primary: lime
+      accent: lime
+      toggle:
+        icon: material/console
+        name: "Terminal — next palette"
+    - scheme: default          # Daybreak — clean, modern light
+      primary: blue
+      accent: blue
+      toggle:
         icon: material/weather-sunny
-        name: Switch to dark mode
+        name: "Daybreak — next palette"
+    - scheme: default          # Rosé Dawn — warm, elegant light
+      primary: pink
+      accent: pink
+      toggle:
+        icon: material/flower-tulip
+        name: "Rosé Dawn — next palette"
+    - scheme: default          # Mocha — warm "quiet luxury" neutrals (Mocha Mousse)
+      primary: brown
+      accent: brown
+      toggle:
+        icon: material/coffee
+        name: "Mocha — next palette"
+    - scheme: default          # Lavender — soft, dreamy digital lavender
+      primary: purple
+      accent: purple
+      toggle:
+        icon: material/flower-outline
+        name: "Lavender — next palette"
+    - scheme: default          # Matcha — muted sage / wellness green
+      primary: green
+      accent: green
+      toggle:
+        icon: material/leaf
+        name: "Matcha — next palette"
+    - scheme: default          # Butter — soft buttery yellow (2026 trend)
+      primary: yellow
+      accent: yellow
+      toggle:
+        icon: material/food-croissant
+        name: "Butter — next palette"
+    - scheme: default          # Cloud Dancer — serene warm white (Pantone 2026 CotY)
+      primary: grey
+      accent: grey
+      toggle:
+        icon: material/cloud-outline
+        name: "Cloud Dancer — next palette"
+    - scheme: default          # Peach Fuzz — warm coral peach (Pantone 2024)
+      primary: orange
+      accent: orange
+      toggle:
+        icon: material/flower-poppy
+        name: "Peach Fuzz — next palette"
+    # ---- Hacker dark palettes (black-first, green/red/neon vibes) --------
+    - scheme: slate            # Matrix — digital-rain green on pure black
+      primary: light-green
+      accent: light-green
+      toggle:
+        icon: material/matrix
+        name: "Matrix — next palette"
+    - scheme: slate            # Redline — crimson terminal on black
+      primary: pink
+      accent: pink
+      toggle:
+        icon: material/skull
+        name: "Redline — next palette"
+    - scheme: slate            # Bloodmoon — blood-red & ember on charcoal
+      primary: deep-orange
+      accent: deep-orange
+      toggle:
+        icon: material/moon-waning-gibbous
+        name: "Bloodmoon — next palette"
+    - scheme: slate            # Toxic — acid green-yellow radioactive glow
+      primary: yellow
+      accent: yellow
+      toggle:
+        icon: material/biohazard
+        name: "Toxic — next palette"
+    - scheme: slate            # Cyberdeck — electric cyan + magenta cyberpunk
+      primary: cyan
+      accent: cyan
+      toggle:
+        icon: material/chip
+        name: "Cyberdeck — next palette"
+    - scheme: slate            # Amber — warm amber-phosphor monochrome CRT
+      primary: amber
+      accent: amber
+      toggle:
+        icon: material/television-classic
+        name: "Amber — next palette"
+    - scheme: slate            # Synthwave — retrowave magenta/cyan on deep violet
+      primary: deep-purple
+      accent: deep-purple
+      toggle:
+        icon: material/sine-wave
+        name: "Synthwave — next palette"
+    # ---- Warm multi-hue darks (Nocturne warmed / balanced contrast) ------
+    - scheme: slate            # Aurora — calm multi-hue night: teal-green, sky & violet
+      primary: light-blue
+      accent: light-blue
+      toggle:
+        icon: material/shimmer
+        name: "Aurora — next palette"
+    - scheme: slate            # Nebula — warm cosmic: violet, magenta-pink & amber
+      primary: black
+      accent: black
+      toggle:
+        icon: material/telescope
+        name: "Nebula — next palette"
+    - scheme: slate            # Nova — high-contrast tri-tone: coral-red, gold & cyan
+      primary: blue-grey
+      accent: blue-grey
+      toggle:
+        icon: material/flare
+        name: "Nova — next palette"
+    - scheme: slate            # Vaporwave — soft pastel synthwave: pink, cyan & lavender
+      primary: grey
+      accent: grey
+      toggle:
+        icon: material/palm-tree
+        name: "Vaporwave — next palette"
   features:
     - navigation.instant
     - navigation.instant.progress
     - navigation.tracking
-    - navigation.tabs
-    - navigation.tabs.sticky
+    # Phase-based IA: top-level groups (Recon/Enumeration/…) render as bold
+    # sidebar section headers instead of top tabs — see nav: below.
     - navigation.sections
     - navigation.top
     - navigation.footer
@@ -68,10 +228,15 @@ extra_javascript:
   # Self-contained "lite" search: data first, then the UI. Works on file:// too.
   - javascripts/search-data.js
   - javascripts/search-lite.js
+  # Swatch grid palette picker (replaces the one-at-a-time header toggle).
+  - javascripts/palette-picker.js
+  # Hidden mini-game — type "mario" to summon the warp zone.
+  - javascripts/minigame.js
 
 # Generates javascripts/search-data.js from the notes on every build.
 hooks:
   - hooks/gen_search_data.py
+  - hooks/highlight_flags.py
 
 extra:
   tags:
@@ -79,9 +244,11 @@ extra:
     Cloud: cloud
     Network: network
     Privesc: privesc
+    Mobile: mobile
     Recon: recon
     Windows: windows
     Linux: linux
+    Reference: reference
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/example/betterNotes
@@ -140,10 +307,47 @@ markdown_extensions:
   - pymdownx.tasklist:
       custom_checkbox: true
 
+# Notes are organised by engagement PHASE (kill chain), not by domain:
+#   Recon → Enumeration → Exploitation → Post-Exploitation → Mobile → Other.
+# Files stay in their topic folders (web/, network/, …) so cross-links keep
+# working; only the sidebar grouping is phase-based.
 nav:
   - Home: index.md
-  - Web Apps:
-      - web/index.md
+  - Recon:
+      - Internal / AD Overview: network/index.md
+      - Network Recon: network/recon.md
+      - DNS Enumeration: network/dns.md
+  - Enumeration:
+      - Ports & Services: network/ports.md
+      - SMB: network/smb.md
+      - MSSQL: network/mssql.md
+      - Web Technologies:
+          - webtech/index.md
+          - WordPress: webtech/wordpress.md
+          - Drupal: webtech/drupal.md
+          - Joomla: webtech/joomla.md
+          - Magento: webtech/magento.md
+          - Jenkins: webtech/jenkins.md
+          - GitLab: webtech/gitlab.md
+          - Atlassian (Jira/Confluence): webtech/atlassian.md
+          - SharePoint: webtech/sharepoint.md
+          - Tomcat: webtech/tomcat.md
+          - IIS: webtech/iis.md
+          - Nginx: webtech/nginx.md
+          - ColdFusion: webtech/coldfusion.md
+          - Spring Boot: webtech/spring-boot.md
+          - Flask / Werkzeug: webtech/flask.md
+          - GraphQL (enum): webtech/graphql.md
+          - Grafana: webtech/grafana.md
+          - phpMyAdmin: webtech/phpmyadmin.md
+          - Kibana / ELK: webtech/kibana-elk.md
+      - Cloud:
+          - cloud/index.md
+          - AWS: cloud/aws.md
+          - Azure: cloud/azure.md
+          - GCP: cloud/gcp.md
+  - Exploitation:
+      - Web Apps: web/index.md
       - Injection:
           - SQL Injection: web/sqli.md
           - NoSQL Injection: web/nosql-injection.md
@@ -170,41 +374,61 @@ nav:
           - Request Smuggling: web/request-smuggling.md
           - Web Cache Poisoning: web/web-cache-poisoning.md
           - Race Conditions: web/race-conditions.md
-  - Cloud:
-      - cloud/index.md
-      - Providers:
-          - AWS: cloud/aws.md
-          - Azure: cloud/azure.md
-          - GCP: cloud/gcp.md
-      - Containers & Pipelines:
-          - Kubernetes: cloud/kubernetes.md
-          - Container Escape: cloud/containers.md
-          - CI/CD & Supply Chain: cloud/cicd.md
-  - Network / AD:
-      - network/index.md
-      - Recon:
-          - Recon: network/recon.md
-          - DNS: network/dns.md
-      - Services:
-          - SMB: network/smb.md
-          - MSSQL: network/mssql.md
       - Active Directory:
           - Kerberos: network/kerberos.md
-          - Active Directory: network/active-directory.md
+          - AD Attack Paths: network/active-directory.md
           - Coercion & NTLM Relay: network/ntlm-relay.md
           - AD CS (ESC): network/adcs.md
           - Password Spraying: network/password-spraying.md
           - BloodHound: network/bloodhound.md
-  - Privesc & Post-Ex:
-      - privesc/index.md
+      - Containers & Pipelines:
+          - Kubernetes: cloud/kubernetes.md
+          - Container Escape: cloud/containers.md
+          - CI/CD & Supply Chain: cloud/cicd.md
+  - Post-Exploitation:
+      - Overview: privesc/index.md
       - Linux:
           - Linux Privesc: privesc/linux.md
           - GTFOBins & SUID: privesc/gtfobins.md
       - Windows:
           - Windows Privesc: privesc/windows.md
           - Token & Privilege Abuse: privesc/windows-tokens.md
-      - Post-Exploitation:
+      - Credentials & Movement:
           - Credential Hunting: privesc/credential-hunting.md
           - Persistence: privesc/persistence.md
           - Pivoting & Exfil: privesc/pivoting.md
-  - Tags: tags.md
+  - Mobile:
+      - mobile/index.md
+      - Android: mobile/android.md
+      - iOS: mobile/ios.md
+  - Toolbox:
+      - toolbox/index.md
+      - Checklists:
+          - Web Pentest Checklist: checklists/web.md
+          - Internal / AD Checklist: checklists/internal-ad.md
+      - Reference:
+          - Tool Index: reference/tools.md
+          - Attack Index (MITRE): reference/attacks.md
+          - Wordlist Reference: reference/wordlists.md
+      - Tradecraft:
+          - Burp Suite Tips: toolbox/burp.md
+          - C2 Frameworks: toolbox/c2.md
+          - Social Engineering: toolbox/social-engineering.md
+      - Shell Basics:
+          - Navigation & Finding: toolbox/navigation.md
+          - Files & Permissions: toolbox/files.md
+          - Text Processing: toolbox/text.md
+      - System:
+          - Processes & Services: toolbox/processes.md
+          - Disk & Filesystem: toolbox/disk.md
+          - Users & Sudo: toolbox/users.md
+          - Package Management: toolbox/packages.md
+          - Logs & System Info: toolbox/logs.md
+      - Networking & Transfer:
+          - Networking: toolbox/networking.md
+          - SSH & Keys: toolbox/ssh.md
+          - Archives & Transfer: toolbox/transfer.md
+      - Fixing Things:
+          - Troubleshooting: toolbox/troubleshooting.md
+          - Bash Tips & Shortcuts: toolbox/bash.md
+      - Tags: tags.md
