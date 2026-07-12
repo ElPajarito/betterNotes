@@ -28,179 +28,20 @@ theme:
       reference: material/toolbox
       default: material/tag
   palette:
-    # Curated palettes — the header toggle cycles through them (first = default).
-    # The `primary` value is the CSS hook each palette's colors are keyed on
-    # (see docs/stylesheets/extra.css). Don't reuse a primary within a scheme.
-    - scheme: slate            # Nocturne — calm indigo night (default)
-      primary: indigo
-      accent: indigo
+    # Two palettes only: Nova (dark, default) and Daybreak (light).
+    # Material's standard header toggle switches between them.
+    - scheme: slate            # Nova — high-contrast tri-tone dark (default)
+      primary: blue-grey
+      accent: blue-grey
       toggle:
         icon: material/weather-night
-        name: "Nocturne — next palette"
-    - scheme: slate            # Eclipse — soft mauve on deep charcoal
-      primary: purple
-      accent: purple
-      toggle:
-        icon: material/moon-waning-crescent
-        name: "Eclipse — next palette"
-    - scheme: slate            # Forest — muted, natural greens
-      primary: green
-      accent: green
-      toggle:
-        icon: material/pine-tree
-        name: "Forest — next palette"
-    - scheme: slate            # Ember — warm, cozy amber/orange
-      primary: orange
-      accent: orange
-      toggle:
-        icon: material/fire
-        name: "Ember — next palette"
-    - scheme: slate            # Plum — moody midnight jewel tones
-      primary: red
-      accent: red
-      toggle:
-        icon: material/diamond-stone
-        name: "Plum — next palette"
-    - scheme: slate            # Academia — vintage sepia, cream & old gold
-      primary: brown
-      accent: brown
-      toggle:
-        icon: material/book-open-variant
-        name: "Academia — next palette"
-    - scheme: slate            # Future Dusk — atmospheric blue-violet (WGSN 2025)
-      primary: blue
-      accent: blue
-      toggle:
-        icon: material/weather-night-partly-cloudy
-        name: "Future Dusk — next palette"
-    - scheme: slate            # Transformative Teal — blue-aqua fusion (WGSN 2026 CotY)
-      primary: teal
-      accent: teal
-      toggle:
-        icon: material/waves
-        name: "Transformative Teal — next palette"
-    - scheme: slate            # Terminal — the original neon-green hacker look
-      primary: lime
-      accent: lime
-      toggle:
-        icon: material/console
-        name: "Terminal — next palette"
+        name: Switch to light mode
     - scheme: default          # Daybreak — clean, modern light
       primary: blue
       accent: blue
       toggle:
         icon: material/weather-sunny
-        name: "Daybreak — next palette"
-    - scheme: default          # Rosé Dawn — warm, elegant light
-      primary: pink
-      accent: pink
-      toggle:
-        icon: material/flower-tulip
-        name: "Rosé Dawn — next palette"
-    - scheme: default          # Mocha — warm "quiet luxury" neutrals (Mocha Mousse)
-      primary: brown
-      accent: brown
-      toggle:
-        icon: material/coffee
-        name: "Mocha — next palette"
-    - scheme: default          # Lavender — soft, dreamy digital lavender
-      primary: purple
-      accent: purple
-      toggle:
-        icon: material/flower-outline
-        name: "Lavender — next palette"
-    - scheme: default          # Matcha — muted sage / wellness green
-      primary: green
-      accent: green
-      toggle:
-        icon: material/leaf
-        name: "Matcha — next palette"
-    - scheme: default          # Butter — soft buttery yellow (2026 trend)
-      primary: yellow
-      accent: yellow
-      toggle:
-        icon: material/food-croissant
-        name: "Butter — next palette"
-    - scheme: default          # Cloud Dancer — serene warm white (Pantone 2026 CotY)
-      primary: grey
-      accent: grey
-      toggle:
-        icon: material/cloud-outline
-        name: "Cloud Dancer — next palette"
-    - scheme: default          # Peach Fuzz — warm coral peach (Pantone 2024)
-      primary: orange
-      accent: orange
-      toggle:
-        icon: material/flower-poppy
-        name: "Peach Fuzz — next palette"
-    # ---- Hacker dark palettes (black-first, green/red/neon vibes) --------
-    - scheme: slate            # Matrix — digital-rain green on pure black
-      primary: light-green
-      accent: light-green
-      toggle:
-        icon: material/matrix
-        name: "Matrix — next palette"
-    - scheme: slate            # Redline — crimson terminal on black
-      primary: pink
-      accent: pink
-      toggle:
-        icon: material/skull
-        name: "Redline — next palette"
-    - scheme: slate            # Bloodmoon — blood-red & ember on charcoal
-      primary: deep-orange
-      accent: deep-orange
-      toggle:
-        icon: material/moon-waning-gibbous
-        name: "Bloodmoon — next palette"
-    - scheme: slate            # Toxic — acid green-yellow radioactive glow
-      primary: yellow
-      accent: yellow
-      toggle:
-        icon: material/biohazard
-        name: "Toxic — next palette"
-    - scheme: slate            # Cyberdeck — electric cyan + magenta cyberpunk
-      primary: cyan
-      accent: cyan
-      toggle:
-        icon: material/chip
-        name: "Cyberdeck — next palette"
-    - scheme: slate            # Amber — warm amber-phosphor monochrome CRT
-      primary: amber
-      accent: amber
-      toggle:
-        icon: material/television-classic
-        name: "Amber — next palette"
-    - scheme: slate            # Synthwave — retrowave magenta/cyan on deep violet
-      primary: deep-purple
-      accent: deep-purple
-      toggle:
-        icon: material/sine-wave
-        name: "Synthwave — next palette"
-    # ---- Warm multi-hue darks (Nocturne warmed / balanced contrast) ------
-    - scheme: slate            # Aurora — calm multi-hue night: teal-green, sky & violet
-      primary: light-blue
-      accent: light-blue
-      toggle:
-        icon: material/shimmer
-        name: "Aurora — next palette"
-    - scheme: slate            # Nebula — warm cosmic: violet, magenta-pink & amber
-      primary: black
-      accent: black
-      toggle:
-        icon: material/telescope
-        name: "Nebula — next palette"
-    - scheme: slate            # Nova — high-contrast tri-tone: coral-red, gold & cyan
-      primary: blue-grey
-      accent: blue-grey
-      toggle:
-        icon: material/flare
-        name: "Nova — next palette"
-    - scheme: slate            # Vaporwave — soft pastel synthwave: pink, cyan & lavender
-      primary: grey
-      accent: grey
-      toggle:
-        icon: material/palm-tree
-        name: "Vaporwave — next palette"
+        name: Switch to dark mode
   features:
     - navigation.instant
     - navigation.instant.progress
@@ -228,8 +69,6 @@ extra_javascript:
   # Self-contained "lite" search: data first, then the UI. Works on file:// too.
   - javascripts/search-data.js
   - javascripts/search-lite.js
-  # Swatch grid palette picker (replaces the one-at-a-time header toggle).
-  - javascripts/palette-picker.js
   # Hidden mini-game — type "mario" to summon the warp zone.
   - javascripts/minigame.js
 
