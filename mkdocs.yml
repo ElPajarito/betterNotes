@@ -157,6 +157,7 @@ nav:
       - Network Recon: network/recon.md
       - DNS Enumeration: network/dns.md
   - Enumeration:
+      - enumeration/index.md
       - Ports & Services: network/ports.md
       - SMB: network/smb.md
       - MSSQL: network/mssql.md

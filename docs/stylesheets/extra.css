@@ -153,6 +153,122 @@ html { scroll-behavior: smooth; }
 }
 
 /* ==========================================================================
+   Homepage — kill-chain rail (index.md). Tri-tone rides the palette tokens
+   so it re-themes automatically (coral/gold/cyan in Nova, blue/teal/violet
+   in Daybreak). Per-item colour is set via .pwn-c1/2/3 -> --c.
+   ========================================================================== */
+.pwn-c1 { --c: var(--pwn-accent); }
+.pwn-c2 { --c: var(--pwn-accent-2); }
+.pwn-c3 { --c: var(--pwn-accent-3); }
+.pwn-mono { font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+/* Visually-hidden but accessible — suppresses Material's auto "Home" title. */
+.pwn-sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+.pwn-lead {
+  max-width: 60ch;
+  margin: 0.4rem auto 2.4rem;
+  text-align: center;
+  color: var(--md-default-fg-color);
+  opacity: 0.72;
+  font-size: 0.98rem;
+}
+
+.pwn-rail { max-width: 960px; margin: 0 auto; }
+
+.pwn-rail-core {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border: 1px solid color-mix(in srgb, var(--md-default-fg-color) 12%, transparent);
+  border-radius: 14px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--pwn-accent) 3%, transparent);
+}
+.pwn-rail-step {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 22px 20px 24px;
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.16s ease;
+}
+.pwn-rail-step + .pwn-rail-step {
+  border-left: 1px solid color-mix(in srgb, var(--md-default-fg-color) 12%, transparent);
+}
+.pwn-rail-step:hover { background: color-mix(in srgb, var(--c) 10%, transparent); }
+.pwn-rail-idx { color: var(--c); font-size: 0.78rem; letter-spacing: 0.08em; }
+.pwn-rail-name { color: var(--c); font-weight: 700; font-size: 1.1rem; letter-spacing: 0.01em; }
+.pwn-rail-step:hover .pwn-rail-name { text-decoration: underline; text-underline-offset: 3px; }
+.pwn-rail-tag { color: var(--md-default-fg-color); opacity: 0.6; font-size: 0.84rem; }
+
+.pwn-rail-flow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 18px 4px 10px;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--md-default-fg-color);
+  opacity: 0.5;
+}
+.pwn-rail-flow .ln { height: 1px; flex: 1; background: color-mix(in srgb, var(--md-default-fg-color) 18%, transparent); }
+
+.pwn-rail-side { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
+.pwn-rail-track {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  border: 1px dashed color-mix(in srgb, var(--md-default-fg-color) 22%, transparent);
+  border-radius: 12px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.16s ease, background 0.16s ease;
+}
+.pwn-rail-track:hover { border-color: var(--c); background: color-mix(in srgb, var(--c) 7%, transparent); }
+.pwn-rail-track svg {
+  width: 30px; height: 30px; flex: none;
+  fill: none; stroke: var(--c); stroke-width: 1.7;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.pwn-rail-lbl {
+  display: block; font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--md-default-fg-color); opacity: 0.5; margin-bottom: 2px;
+}
+.pwn-rail-track .pwn-rail-name { font-size: 1.05rem; }
+
+@media (max-width: 720px) {
+  .pwn-rail-core { grid-template-columns: 1fr 1fr; }
+  .pwn-rail-step:nth-child(3) { border-left: 0; }
+  .pwn-rail-step:nth-child(n + 3) { border-top: 1px solid color-mix(in srgb, var(--md-default-fg-color) 12%, transparent); }
+  .pwn-rail-side { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pwn-rail-step, .pwn-rail-track { transition: none; }
+}
+
+/* ==========================================================================
+   Sidebar — vibrant phase headers (Recon / Enumeration / … in the accent)
+   ========================================================================== */
+.md-nav--primary > .md-nav__list > .md-nav__item--section > .md-nav__link,
+.md-nav--primary > .md-nav__list > .md-nav__item--section > .md-nav__link .md-nav__link {
+  color: var(--pwn-accent);
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+/* the section icon rides the same accent colour */
+.md-nav--primary > .md-nav__list > .md-nav__item--section > .md-nav__link svg {
+  fill: var(--pwn-accent);
+}
+
+/* ==========================================================================
    Grid cards — the "level select" for each topic
    ========================================================================== */
 .md-typeset .grid.cards > ul > li,
