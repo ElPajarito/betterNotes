@@ -33,11 +33,6 @@ Send 20–50 copies; success = the guarded action fired multiple times.
 !!! loot "Common wins"
     Double-spend store credit, apply one coupon N times, or bypass rate limits on OTP verification for a brute force.
 
-## :material-shield-check: Remediation
-
-- Enforce atomicity: DB unique constraints, `SELECT ... FOR UPDATE`, idempotency keys.
-- Server-side locks around check-then-act; don't rely on app-layer counters.
-
 ## :material-link-variant: Related
 
 - Batching amplifies OTP brute force → [Auth Bypass](auth-bypass.md); also see [GraphQL](graphql.md) batching.

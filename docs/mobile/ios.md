@@ -110,17 +110,44 @@ ios jailbreak disable
 - **Runtime tampering** — `objection` to bypass biometric prompts, flip feature
   flags, and read decrypted values live.
 
-## :material-shield-check: Remediation (for the report)
+## :material-cellphone-arrow-down: Sideloading & provisioning
 
-- Store credentials in the Keychain with `...ThisDeviceOnly` accessibility; never
-  in `NSUserDefaults`/plists.
-- Enforce controls server-side; treat jailbreak/pinning as defense-in-depth only.
-- Keep ATS strict (no arbitrary-loads exceptions); pin certificates.
-- Clear the pasteboard and blur the app snapshot on background.
+```bash
+mpt_ios -m                       # mount the device filesystem
+mpt_ios -i /path/to/app.ipa      # (re)sign + install an IPA
+idevice install app.ipa          # alternative installer over USB
+# Read the embedded provisioning profile (entitlements, team, expiry, devices)
+openssl cms -cmsout -in Payload/Target.app/embedded.mobileprovision -inform der -print
+```
+
+!!! bug "Device wedged / tooling can't see it"
+    First thing to try: **unplug and replug the cable**. USB muxd sessions go stale
+    constantly — a reconnect fixes most "device not found" / hung-install errors
+    before you go deeper.
+
+## :material-swap-horizontal: Full proxy setup (host ↔ VM ↔ iPhone)
+
+When the phone can only reach your analysis VM (not the host running Burp), bridge the two so Burp still sees the traffic:
+
+1. On the iPhone: Wi-Fi → set the **host/VM as HTTP proxy** on Burp's port (8080).
+2. If the phone reaches the *host* but Burp runs in a *VM*, port-forward the host
+   port into the VM (SSH tunnel `host:8080 → vm:8080`, or a Windows port-proxy —
+   it'll prompt to authorise the forward the first time).
+3. In Burp, bind the proxy listener to the **VM IP / all interfaces**.
+4. Install Burp's CA: browse to `http://burp`, install the profile, then
+   **Settings → General → About → Certificate Trust** and flip the switch to give
+   it *full* trust.
+5. Sanity-check with an HTTP site (`ifconfig.me`) **and** an HTTPS site
+   (`google.com`) — both should load clean and appear in Burp.
+
+!!! tip "Prove the path before blaming pinning"
+    Spin up a `python3 -m http.server` on the host and `curl` it from the VM, then
+    hit it from the iPhone browser. If plain HTTP/HTTPS doesn't proxy cleanly, it's
+    a **routing/CA** problem, not app-level pinning — fix that first.
 
 ## :material-link-variant: Related
 
 - Intercepted traffic → [API / web attacks](../web/index.md):
   [Auth Bypass](../web/auth-bypass.md), [JWT](../web/jwt.md), IDOR.
-- Android counterpart: [Android App Pentesting](android.md).
+- Android counterpart: [Android App Pentesting](android/index.md).
 - Reference: [OWASP MASTG — iOS](https://mas.owasp.org/MASTG/), [Frida](https://frida.re/), [Objection](https://github.com/sensepost/objection).

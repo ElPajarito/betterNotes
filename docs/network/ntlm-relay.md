@@ -44,11 +44,6 @@ ntlmrelayx.py -t http://CA/certsrv/certfnsh.asp --adcs   # ESC8 → cert as vict
 !!! opsec "Poisoning is loud"
     Responder answers broadcast traffic network-wide; targeted coercion (one host → you) is quieter and more surgical.
 
-## :material-shield-check: Remediation
-
-- Enforce SMB **and** LDAP signing/channel binding; disable LLMNR/NBT-NS.
-- Patch/disable AD CS HTTP enrollment; restrict coercion RPC.
-
 ## :material-link-variant: Related
 
 - Follows on from [SMB](smb.md); certs → [Active Directory](active-directory.md); AD CS ESC → [AD CS](adcs.md).

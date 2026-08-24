@@ -58,11 +58,6 @@ curl http://$TARGET/nginx_status              # stub_status if left open
 # missing security headers → note for the report (whatweb / nuclei flag these)
 ```
 
-## :material-shield-check: Remediation
-
-- Match trailing slashes between `location` and `alias`; avoid raw `$uri`/user
-  input in `proxy_pass`; keep `merge_slashes on`; restrict `stub_status`.
-
 ## :material-link-variant: Related
 
 - Fingerprinted at [Web Technologies](index.md) / [Ports](../network/ports.md).

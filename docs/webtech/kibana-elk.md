@@ -3,7 +3,7 @@ tags:
   - Web
 ---
 
-# :material-elasticsearch: Kibana / ELK
+# :simple-elasticsearch: Kibana / ELK
 
 <span class="pill pill-medium">log stack</span> <span class="pill pill-info">web</span>
 
@@ -43,11 +43,6 @@ curl -s http://$TARGET:5601/api/status | jq .version.number   # version
 # CVE-2018-17246 — Console plugin LFI → RCE via Canvas
 # match version, then use the public PoC (spawns a reverse shell as kibana)
 ```
-
-## :material-shield-check: Remediation
-
-- Enable Elastic security (auth + TLS); never expose 9200/5601 to untrusted nets;
-  patch Kibana; scrub secrets from logs before indexing.
 
 ## :material-link-variant: Related
 

@@ -57,11 +57,6 @@ flask-unsign --sign --cookie "{'admin': True}" --secret 'leaked-key'   # forge
 ```
 Full payloads → [SSTI](../web/ssti.md).
 
-## :material-shield-check: Remediation
-
-- Never run `debug=True` in prod; strong random `SECRET_KEY` (never committed);
-  autoescape templates; keep Werkzeug patched.
-
 ## :material-link-variant: Related
 
 - Fingerprinted at [Web Technologies](index.md) / [Ports](../network/ports.md).

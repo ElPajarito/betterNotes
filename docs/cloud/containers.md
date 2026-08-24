@@ -45,11 +45,6 @@ mount | grep docker.sock      # host socket mounted in?
 !!! opsec "Escaping is noisy"
     New privileged pods, host mounts, and socket calls are exactly what runtime security (Falco) alerts on.
 
-## :material-shield-check: Remediation
-
-- Never run privileged or mount the docker socket into workloads.
-- Drop capabilities, run as non-root, read-only rootfs, seccomp/AppArmor on.
-
 ## :material-link-variant: Related
 
 - The next hop after a [Kubernetes](kubernetes.md) pod foothold.

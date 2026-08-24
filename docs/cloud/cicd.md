@@ -32,11 +32,6 @@ curl -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
 !!! loot "Pipeline env = crown jewels"
     Registry creds, cloud deploy roles, signing keys, kubeconfigs — all commonly present in a single job's environment.
 
-## :material-shield-check: Remediation
-
-- Ephemeral, isolated runners; least-privilege OIDC (no long-lived cloud keys).
-- Protect default branches; require review on workflow files; pin actions by SHA.
-
 ## :material-link-variant: Related
 
 - Stolen cloud role → [AWS](aws.md) / [Azure](azure.md) / [GCP](gcp.md) escalation.

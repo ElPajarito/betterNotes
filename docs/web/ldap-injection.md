@@ -31,11 +31,6 @@ Use the wildcard as a boolean oracle to leak attribute values char-by-char:
 (&(uid=admin)(password=ab*))  -> narrow it down
 ```
 
-## :material-shield-check: Remediation
-
-- Escape LDAP special characters (`* ( ) \ NUL`) per RFC 4515 before building filters.
-- Use parameterized directory APIs and a least-privilege bind account.
-
 ## :material-link-variant: Related
 
 - Same always-true logic as [SQL Injection](sqli.md) and [NoSQL Injection](nosql-injection.md).

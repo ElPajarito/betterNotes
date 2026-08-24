@@ -38,11 +38,6 @@ Request `/{account}/wallet.css` — the app serves the wallet page, the cache st
 !!! opsec "Blast radius is huge"
     Poisoning a shared edge cache affects *all* users of that key. On engagements, poison a benign, low-traffic path to prove impact.
 
-## :material-shield-check: Remediation
-
-- Include every response-affecting input in the cache key, or don't reflect it.
-- Cache only truly static content; strip hop-by-hop headers at the edge.
-
 ## :material-link-variant: Related
 
 - Reflected input often comes from [XSS](xss.md); desync via [Request Smuggling](request-smuggling.md).

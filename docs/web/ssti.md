@@ -50,10 +50,17 @@ ${7*7}      -> 49    Freemarker / JSP EL
 !!! opsec "You're running code on their box"
     Same footprint as [command injection](command-injection.md) — one OAST check beats spawning shells blindly.
 
-## :material-shield-check: Remediation
+## :material-link-plus: SSTI hiding in the URL path
 
-- Render templates with a fixed template and pass user input as **context data**, never build the template string from input.
-- Use a sandboxed/logic-less engine (e.g. Mustache) where possible.
+A path segment that 404s as a literal can still reach the template engine once you turn it into a reflected query. Real walkthrough:
+
+```text
+$TARGET/docs/1.0/123     -> 404 not found
+$TARGET/docs/1.0/?123    -> now reflected in the source as /docs/1.0/?123#
+$TARGET/docs/1.0/?{{7*7}} -> renders /docs/1.0/?49#   <-- SSTI executes
+```
+
+Takeaway: when a path value isn't reflected, retry it as a `?`-appended query — reflection is a prerequisite for spotting the `49`, and the template engine may evaluate what the router wouldn't.
 
 ## :material-link-variant: Related
 

@@ -70,6 +70,74 @@ find . -name '*.tmp' | xargs rm     # feed results into a command
 !!! tip "Chaining commands"
     `a && b` runs `b` only if `a` succeeded. `a || b` runs `b` only if `a` failed. `a ; b` runs both regardless. Great for `make && ./run || echo FAILED`.
 
+## :material-file-find: Finding files & handy recipes
+
+```bash
+find . -type f -name "*.xml"     # files ending .xml ( -type f ignores dirs )
+find . -type f -iname "*.xml"    # case-insensitive
+grep -rin "string" .             # recursive, case-insensitive, with line numbers
+
+# proxy a python script through Burp without touching its code
+HTTP_PROXY="http://127.0.0.1:8080" HTTPS_PROXY="http://127.0.0.1:8080" \
+  REQUESTS_CA_BUNDLE="/path/to/burp-cert.pem" python3 script.py
+
+# pull URLs out of a JSON/wayback dump
+cat site.json | grep -oP 'https?://[^"]+' > urls.txt
+```
+
+!!! tip "Keep a command out of history"
+    Prefix a command with a **leading space** and it won't be saved to shell history (needs `HISTCONTROL=ignorespace`/`ignoreboth`, the default on most distros). Handy for one-off commands containing secrets.
+
+## :material-git: Git essentials
+
+```bash
+# wire a local repo to a new remote and push
+git remote add origin git@github.com:<user>/<repo>.git
+git branch -M main
+git push -u origin main
+git pull origin main
+
+# load your key so SSH pushes stop prompting
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+
+# committing a deletion (staging removes tracked files too)
+git add path/to/file        # stages the deletion as well as edits
+git commit -m "Remove file"
+```
+
+## :material-lan: VM as a gateway for another VM
+
+Route a client VM's traffic through a second "router" VM (e.g. Kali → Ubuntu → internet) so the client only ever talks to the gateway.
+
+```text
+Adapters (VirtualBox):
+  Gateway VM  Adapter1 = NAT/Bridged (WAN)   Adapter2 = Internal Network "proxy_net"
+  Client  VM  Adapter1 = Internal Network "proxy_net"   (name must match)
+```
+
+```bash
+# --- on the GATEWAY VM ---
+ip a                                             # find WAN (has IP, e.g. enp0s3) + LAN (no IP, enp0s8)
+sudo ip addr add 10.10.10.1/24 dev enp0s8        # give the LAN iface a static IP
+sudo ip link set enp0s8 up
+sudo sysctl -w net.ipv4.ip_forward=1             # enable forwarding (persist in /etc/sysctl.conf)
+# NAT the internal net out through the WAN iface
+sudo iptables -t nat -A POSTROUTING -o enp0s3 -j MASQUERADE
+sudo iptables -A FORWARD -i enp0s3 -o enp0s8 -m state --state RELATED,ESTABLISHED -j ACCEPT
+sudo iptables -A FORWARD -i enp0s8 -o enp0s3 -j ACCEPT
+
+# --- on the CLIENT VM ---
+sudo ip addr flush dev eth0
+sudo ip addr add 10.10.10.2/24 dev eth0
+sudo ip link set eth0 up
+sudo ip route add default via 10.10.10.1         # send everything through the gateway
+echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf
+```
+
+!!! tip "Verify in order"
+    From the client: `ping 10.10.10.1` (internal link) → `ping 8.8.8.8` (forwarding/NAT) → `ping google.com` (DNS). If `8.8.8.8` works but the domain fails, it's purely a `/etc/resolv.conf` DNS issue.
+
 ## :material-link-variant: Related
 
 - Feeding output into filters → [Text Processing](text.md).

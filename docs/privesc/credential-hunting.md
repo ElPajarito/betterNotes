@@ -42,10 +42,6 @@ type C:\Windows\Panther\Unattend.xml
 !!! opsec "Touching LSASS is watched"
     Dumping LSASS is a top EDR trigger — prefer disk-based creds first, or use a signed/comsvcs technique deliberately.
 
-## :material-shield-check: Remediation
-
-- Secrets in a vault, never on disk; rotate on exposure; least-privilege service accounts.
-
 ## :material-link-variant: Related
 
 - Fuels [Linux Privesc](linux.md), [Windows Privesc](windows.md), and [Pivoting & Exfil](pivoting.md).

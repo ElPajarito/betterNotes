@@ -719,3 +719,45 @@ body.pwn-search-open { overflow: hidden; }
   body.pwn-crt { animation: none; }
   body.pwn-crt::after { animation: none; }
 }
+
+/* ==========================================================================
+   Layout safety net — sidebar vs footer.
+   Material sizes .md-sidebar__scrollwrap with JS. The sidebar is position:
+   sticky, the footer is position:static, so a *positioned* sidebar always
+   paints over a *static* footer whenever their boxes intersect. If that JS
+   height is ever stale (instant navigation, resize, zoom, long nav) the nav
+   bleeds over the "Previous / Next" links. Two guards:
+     1. cap the scrollwrap so it can never exceed the viewport, JS or not;
+     2. give the footer its own stacking context above the sidebar.
+   ========================================================================== */
+.md-sidebar--primary .md-sidebar__scrollwrap,
+.md-sidebar--secondary .md-sidebar__scrollwrap {
+  max-height: calc(100vh - 5.6rem);
+  overflow-y: auto;
+}
+
+.md-footer {
+  position: relative;
+  z-index: 3;
+  background-color: var(--md-footer-bg-color);
+}
+
+/* ==========================================================================
+   Paired blocks that should read as one unit — e.g. two flag tables split by
+   category. Material renders tables as inline-block so they shrink to their
+   content; inside a grid that leaves a wide ragged gutter between a narrow
+   table and a wide one. `.grid.tight` makes each table fill its column so the
+   only space between them is the gutter itself.
+   ========================================================================== */
+.md-typeset .grid.tight {
+  gap: .4rem .6rem;
+  align-items: start;
+}
+.md-typeset .grid.tight > * { min-width: 0; }
+/* Material wraps every table in .md-typeset__scrollwrap > .md-typeset__table,
+   and that wrapper is inline-block (shrinks to content) with negative margins
+   for edge-to-edge scrolling. Both have to be neutralised or the table floats
+   away from the gutter. */
+.md-typeset .grid.tight .md-typeset__scrollwrap { margin: 0; }
+.md-typeset .grid.tight .md-typeset__table { display: block; width: 100%; padding: 0; }
+.md-typeset .grid.tight table:not([class]) { display: table; width: 100%; }

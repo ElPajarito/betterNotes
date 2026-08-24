@@ -38,11 +38,6 @@ msf> use unix/webapp/drupal_drupalgeddon2
     Drupal 8+: upload a malicious **module** (tarball) or abuse Twig SSTI in
     templates. Admin creds → shell.
 
-## :material-shield-check: Remediation
-
-- Keep core + modules patched (Drupalgeddon is old but still found); remove
-  `CHANGELOG.txt`; least-privilege admin; disable PHP filter.
-
 ## :material-link-variant: Related
 
 - Fingerprinted at [Web Technologies](index.md) / [Ports](../network/ports.md).

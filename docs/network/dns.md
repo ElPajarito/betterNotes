@@ -44,11 +44,6 @@ dig sub.target.tld            # CNAME -> nonexistent-bucket.s3.amazonaws.com
 !!! opsec "Passive first"
     Zone transfers and brute forcing are noticeable; passive sources (crt.sh, `subfinder`) map most of the surface without touching the target.
 
-## :material-shield-check: Remediation
-
-- Restrict AXFR to secondaries; remove dangling DNS records promptly.
-- Split-horizon DNS so internal names aren't public.
-
 ## :material-link-variant: Related
 
 - Kicks off broader [Recon](recon.md); SRV records enumerate [Active Directory](active-directory.md).

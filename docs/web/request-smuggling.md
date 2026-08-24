@@ -48,10 +48,28 @@ Use Burp's **HTTP Request Smuggler** (timing technique) — it sends a crafted r
 !!! opsec "You can hit real users"
     Smuggling can serve *other people's* traffic to you and vice-versa — be careful on production; you can break sessions.
 
-## :material-shield-check: Remediation
+## :material-ruler: How HTTP/1 delimits a request
 
-- Normalize/reject ambiguous requests at the edge; use HTTP/2 end-to-end.
-- Reject messages with both `CL` and `TE`; disable connection reuse to the back-end.
+The whole class of bugs comes from HTTP/1 offering **two** ways to mark where a request body ends, and front-end vs back-end disagreeing on which wins:
+
+- **`Content-Length`** — declares an exact byte length for the body.
+- **`Transfer-Encoding: chunked`** — body is one or more chunks: each chunk is its size in **hex**, a newline, then the chunk bytes; the message ends with a zero-size chunk.
+
+```http
+POST / HTTP/1.1
+Host: $TARGET
+Transfer-Encoding: chunked
+
+b
+Hello World
+0
+
+```
+
+!!! tip "Burp quirks"
+    Burp **auto-unpacks** chunked encoding when displaying, so disable that / use the raw view when hand-crafting TE payloads. Browsers rarely send chunked requests — you'll mostly see it in server responses, so these attacks are Repeater/Turbo-Intruder territory.
+
+Reference walkthrough: [jorianwoltjer.com — HTTP Request Smuggling](https://book.jorianwoltjer.com/web/server-side/http-request-smuggling).
 
 ## :material-link-variant: Related
 

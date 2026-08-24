@@ -43,11 +43,6 @@ curl "http://$TARGET/CFIDE/administrator/enter.cfm?locale=../../../../../../../.
     From `/CFIDE/administrator`: create a **scheduled task** that fetches+executes a
     CFML shell, or add a mapping and upload one. See [Deserialization](../web/deserialization.md).
 
-## :material-shield-check: Remediation
-
-- Patch (CF deserialization CVEs are actively exploited); lock down `/CFIDE`;
-  strong admin creds; remove sample apps.
-
 ## :material-link-variant: Related
 
 - Fingerprinted at [Web Technologies](index.md) / [Ports](../network/ports.md).

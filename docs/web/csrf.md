@@ -39,10 +39,30 @@ Modern browsers default cookies to `SameSite=Lax`, which kills most cross-site `
 !!! tip "Chain with XSS"
     A single [XSS](xss.md) makes CSRF tokens irrelevant — you read the token from the DOM and submit same-origin.
 
-## :material-shield-check: Remediation
+## :material-shield-off-outline: Bypass Origin / Referer checks
 
-- Per-session, unpredictable CSRF tokens validated server-side on every state change.
-- `SameSite=Lax` (or `Strict`) cookies; verify `Origin`/`Referer`.
+Se a app só valida `Origin`/`Referer`, mata o header por completo. Um `<meta>` referrer policy no início da página do atacante faz o browser enviar `Origin: null` (e nenhum `Referer`):
+
+```html
+<meta name="referrer" content="no-referrer">
+```
+
+Com o `Origin` a `null`, um check do tipo "reject if Origin != our-site" que não trata o caso `null` deixa o pedido passar.
+
+## :material-cookie-outline: Cookie flags
+
+Value-by-value reference for the `SameSite` attribute discussed above.
+
+### Same site
+
+`SameSite=Strict`
+:   When the user is on your site, the cookie is sent with the request as expected. However, if the user follows a link into your site from another one, the cookie isn't sent on that initial request
+
+`SameSite=Lax`
+:   Allows the browser to send the cookie with these top-level navigations. For example, if another site references your site's content, in this case by using your cat photo and providing a link to your article
+
+`SameSite=None`
+:   To indicate that you want the cookie to be sent in all contexts. If you provide a service that other sites consume such as widgets, embedded content, affiliate programs, advertising, or sign-in across multiple sites
 
 ## :material-link-variant: Related
 

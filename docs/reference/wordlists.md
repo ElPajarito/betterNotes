@@ -73,6 +73,20 @@ nxc smb $DC -u users.txt -p 'Season2024!' --continue-on-success
 ffuf -u "http://$IP/page?FUZZ=1" -w burp-parameter-names.txt -fs <baseline>   # param mining
 ```
 
+## :material-source-repository-multiple: Repositories worth cloning
+
+| Repo | Why |
+| --- | --- |
+| [SecLists](https://github.com/danielmiessler/SecLists) | The default. Everything, organised by purpose |
+| [fuzz4bounty](https://github.com/0xPugal/fuzz4bounty) | Bug-bounty-shaped lists — params, extensions, LFI/XSS/SQLi payloads, curated for real programs |
+| [xajkep/wordlists](https://github.com/xajkep/wordlists) | Large general collection, split by discovery type |
+| [assetnote wordlists](https://wordlists.assetnote.io/) | Generated from real-world crawl data, refreshed automatically |
+
+!!! tip "Bigger is not better"
+    A 4-million-line list against one endpoint is mostly a way to get rate-limited.
+    Start with a *targeted* list — the tech stack's own conventions — and only
+    escalate to the big ones when the small ones come back empty.
+
 ## :material-hammer-wrench: Generate your own
 
 ```bash

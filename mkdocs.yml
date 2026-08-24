@@ -22,6 +22,7 @@ theme:
       network: material/lan
       privesc: material/key-chain
       mobile: material/cellphone
+      ai: material/robot
       recon: material/radar
       windows: material/microsoft-windows
       linux: material/linux
@@ -84,6 +85,7 @@ extra:
     Network: network
     Privesc: privesc
     Mobile: mobile
+    AI: ai
     Recon: recon
     Windows: windows
     Linux: linux
@@ -155,7 +157,11 @@ nav:
   - Recon:
       - Internal / AD Overview: network/index.md
       - Network Recon: network/recon.md
+      - Web Recon:
+          - web/recon.md
+          - JS Recon: web/js-recon.md
       - DNS Enumeration: network/dns.md
+      - OSINT & Dorking: network/osint.md
   - Enumeration:
       - enumeration/index.md
       - Ports & Services: network/ports.md
@@ -181,6 +187,14 @@ nav:
           - Grafana: webtech/grafana.md
           - phpMyAdmin: webtech/phpmyadmin.md
           - Kibana / ELK: webtech/kibana-elk.md
+          - ASP.NET: webtech/aspnet.md
+          - OutSystems: webtech/outsystems.md
+          - SAP: webtech/sap.md
+          - Telerik: webtech/telerik.md
+          - DotNetNuke: webtech/dotnetnuke.md
+          - Apache Struts: webtech/struts.md
+          - ArcGIS: webtech/arcgis.md
+          - SOAP / Web Services: webtech/soap.md
       - Cloud:
           - cloud/index.md
           - AWS: cloud/aws.md
@@ -196,10 +210,20 @@ nav:
           - XXE: web/xxe.md
           - SSTI: web/ssti.md
           - GraphQL: web/graphql.md
+          - CRLF Injection: web/crlf.md
+          - XPath Injection: web/xpath-injection.md
+          - Spreadsheet / Formula: web/spreadsheet-injection.md
       - Auth & Sessions:
           - Auth Bypass: web/auth-bypass.md
           - JWT Attacks: web/jwt.md
           - OAuth & SAML: web/oauth-saml.md
+          - Rate Limit Bypass: web/rate-limiting.md
+      - Access Control:
+          - IDOR: web/idor.md
+          - 403 Bypass: web/403-bypass.md
+          - Account Takeover: web/account-takeover.md
+          - Mass Assignment: web/mass-assignment.md
+          - Registration & Signup: web/registration.md
       - Client-Side:
           - XSS: web/xss.md
           - CSRF: web/csrf.md
@@ -213,7 +237,11 @@ nav:
           - Open Redirect: web/open-redirect.md
           - Request Smuggling: web/request-smuggling.md
           - Web Cache Poisoning: web/web-cache-poisoning.md
+          - Web Cache Deception: web/web-cache-deception.md
+          - Host Header Injection: web/host-header.md
           - Race Conditions: web/race-conditions.md
+          - LFI / Path Traversal: web/path-traversal.md
+          - Information Leakage: web/info-leakage.md
       - Active Directory:
           - Kerberos: network/kerberos.md
           - AD Attack Paths: network/active-directory.md
@@ -237,23 +265,50 @@ nav:
           - Credential Hunting: privesc/credential-hunting.md
           - Persistence: privesc/persistence.md
           - Pivoting & Exfil: privesc/pivoting.md
+  - AI Hacking:
+      - ai/index.md
+      - AI Enumeration: ai/enumeration.md
+      - Exploitation:
+          - Prompt Injection: ai/prompt-injection.md
+          - Jailbreaks & Payloads: ai/jailbreaks.md
+          - RAG & Agent Abuse: ai/agent-abuse.md
+      - Post-Exploitation: ai/post-exploitation.md
+      - Model & Infra Attacks: ai/model-infra.md
+      - Offensive AI Tooling: ai/offensive-tooling.md
   - Mobile:
       - mobile/index.md
-      - Android: mobile/android.md
+      - Android:
+          - mobile/android/index.md
+          - Emulator & Setup: mobile/android/emulator.md
+          - APKs, AABs & Signing: mobile/android/apks.md
+          - Frida & Objection: mobile/android/frida.md
+          - Components & Intents: mobile/android/components.md
       - iOS: mobile/ios.md
   - Toolbox:
       - toolbox/index.md
       - Checklists:
-          - Web Pentest Checklist: checklists/web.md
+          - Web Pentest Checklist:
+              - checklists/web.md
+              - Payment & Checkout: checklists/payments.md
+              - Password Reset & Recovery: checklists/password-reset.md
+              - File Upload: checklists/file-upload.md
+              - SSO — OAuth & SAML: checklists/sso.md
           - Internal / AD Checklist: checklists/internal-ad.md
       - Reference:
           - Tool Index: reference/tools.md
           - Attack Index (MITRE): reference/attacks.md
           - Wordlist Reference: reference/wordlists.md
+          - Code Review: toolbox/code-review.md
+          - HTTP Reference: reference/http.md
+          - Page Formatting: reference/formatting.md
+          - LaTeX & Reporting: reference/latex.md
       - Tradecraft:
           - Burp Suite Tips: toolbox/burp.md
           - C2 Frameworks: toolbox/c2.md
           - Social Engineering: toolbox/social-engineering.md
+          - Reverse Shells: toolbox/reverse-shells.md
+          - FFUF (fuzzing): toolbox/ffuf.md
+          - Nuclei (templates & DAST): toolbox/nuclei.md
       - Shell Basics:
           - Navigation & Finding: toolbox/navigation.md
           - Files & Permissions: toolbox/files.md
@@ -272,3 +327,21 @@ nav:
           - Troubleshooting: toolbox/troubleshooting.md
           - Bash Tips & Shortcuts: toolbox/bash.md
       - Tags: tags.md
+  - RnD:
+      - rnd/index.md
+      - Bug Bounty Writeups: rnd/bug-bounty.md
+      - HTB Writeups:
+          - rnd/htb.md
+          - Active: rnd/htb/active.md
+          - Blackfield: rnd/htb/blackfield.md
+          - Forest: rnd/htb/forest.md
+          - Sauna: rnd/htb/sauna.md
+          - Intelligence: rnd/htb/intelligence.md
+          - Titanic: rnd/htb/titanic.md
+          - Noter: rnd/htb/noter.md
+      - Cool Blogs & Write-ups: rnd/blogs.md
+      - Labbing:
+          - rnd/labs/index.md
+          - wkhtmltopdf SSRF → LFI: rnd/labs/wkhtmltopdf.md
+      - Research Papers: rnd/papers.md
+      - Certification Roadmaps: rnd/certifications.md

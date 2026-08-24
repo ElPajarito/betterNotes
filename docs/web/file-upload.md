@@ -111,13 +111,6 @@ The upload can still be dangerous:
     ```
     Common: `/uploads/`, `/files/`, `/images/`, `/media/`, or an S3 bucket URL in the response.
 
-## :material-shield-check: Remediation
-
-- Validate by **content**, not extension; re-encode images server-side.
-- Store uploads **outside the web root** or on a domain with no execution.
-- Randomize stored filenames; strip path components.
-- Serve with `Content-Disposition: attachment` and a restrictive `Content-Type`.
-
 ## :material-link-variant: Related
 
 - The payoff is a shell → head to [Linux](../privesc/linux.md) / [Windows Privesc](../privesc/windows.md).

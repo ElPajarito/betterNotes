@@ -72,7 +72,7 @@ If `whoami /priv` shows any of these **enabled**, you likely win instantly:
 
     You can overwrite the EXE the service runs → replace with your payload, restart.
 
-## :material-registry: Registry & install vectors
+## :material-application-cog: Registry & install vectors
 
 - **AlwaysInstallElevated** (both HKLM+HKCU = 1) → any MSI runs as SYSTEM:
   ```powershell

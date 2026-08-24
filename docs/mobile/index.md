@@ -17,7 +17,7 @@ icon: material/cellphone
     Pull the APK, decompile, patch SSL pinning, hook with Frida, and attack the
     exported components.
 
-    [:octicons-arrow-right-24: Android](android.md)
+    [:octicons-arrow-right-24: Android](android/index.md)
 
 -   :material-apple-ios:{ .lg .middle } __iOS__
 
@@ -68,6 +68,17 @@ flowchart LR
 | Runtime instrumentation | **Frida**, Objection | **Frida**, Objection |
 | Proxy | Burp + system CA | Burp + profile CA |
 | Storage | `adb shell`, `run-as` | `Filza`, SSH over USB |
+
+!!! tip "No root? No jailbreak? Still testable"
+    On Android, **Shizuku** grants ADB-level privileges to apps without root — enough
+    for a lot of instrumentation. `apk-mitm` auto-patches pinning without a device
+    root, and re-signing/Frida-gadget injection covers non-jailbroken iOS. Lack of a
+    rooted/jailbroken device narrows the workflow; it rarely blocks it.
+
+## :material-school: Labs & references
+
+- Free hands-on labs: [MobileHackingLab](https://www.mobilehackinglab.com/free-mobile-hacking-labs), [mobile-hacker.com](https://www.mobile-hacker.com/).
+- Cheat sheets: [MobileApp-Pentest-Cheatsheet](https://github.com/tanprathan/MobileApp-Pentest-Cheatsheet), [six2dez pentest book — mobile](https://pentestbook.six2dez.com/mobile/general).
 
 ## :material-link-variant: Related
 

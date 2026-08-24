@@ -47,11 +47,6 @@ SELECT * FROM OPENQUERY("LINKED\SRV", 'select system_user');  -- hop
 !!! loot "MSSQL creds are AD creds"
     The service account often has domain reach; a captured/relayed hash feeds straight into [NTLM Relay](ntlm-relay.md) and [Active Directory](active-directory.md).
 
-## :material-shield-check: Remediation
-
-- Keep `xp_cmdshell` disabled; least-privilege service accounts (no local admin).
-- Disable unneeded linked servers; enforce SMB signing to block relay.
-
 ## :material-link-variant: Related
 
 - Coerced hashes → [NTLM Relay](ntlm-relay.md); domain context → [Active Directory](active-directory.md).

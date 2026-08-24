@@ -67,6 +67,40 @@ See [Networking](networking.md) for the name-vs-address split.
 !!! tip "Read-only filesystem?"
     `mount -o remount,rw /` re-mounts writable — but a filesystem forced read-only usually means the kernel detected disk errors. Check `dmesg` before assuming it's safe.
 
+## :material-clipboard-off: Clipboard died in the VM
+
+Copy/paste between host and guest stops working mid-engagement — usually the
+VirtualBox guest clipboard service has wedged rather than anything you did. Kill
+it and start it again; no reboot, no reinstalling guest additions:
+
+```bash
+pkill -f 'VBoxClient.*clipboard'
+/usr/bin/VBoxClient --clipboard
+```
+
+??? note "Longer version — kill the two PIDs explicitly"
+    ```bash
+    #! /bin/bash
+
+    p1=$(ps -auxfww | grep clipboard | grep VBoxClient | awk -F' ' {'print $2'} | sed -n 1p)
+    p2=$(ps -auxfww | grep clipboard | grep VBoxClient | awk -F' ' {'print $2'} | sed -n 2p)
+
+    kill $p1
+    kill $p2
+
+    /usr/bin/VBoxClient --clipboard
+    ```
+
+    Works, but it assumes **exactly two** matching processes: with one, the second
+    `kill` runs empty; with three, one survives and the restart fails because a
+    clipboard client is already attached. The `grep` can also match itself. `pkill -f`
+    sidesteps all of it by matching the full command line, however many there are.
+
+!!! tip "Check it actually came back"
+    `pgrep -af 'VBoxClient.*clipboard'` should show exactly one process. If the
+    restart exits immediately, an old instance is still holding the X selection —
+    re-run the `pkill` and confirm it's gone before starting a new one.
+
 ## :material-link-variant: Related
 
 - Disk cleanup detail → [Disk & Filesystem](disk.md).

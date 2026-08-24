@@ -136,6 +136,51 @@ aws s3 sync s3://bucket-name ./loot --no-sign-request
 !!! opsec "CloudTrail sees everything"
     Every API call is logged. `iam:*`, `CreateAccessKey`, and `ec2:RunInstances` are high-signal. On a real engagement, coordinate timing and expect detection.
 
+## :material-bucket-outline: S3 bucket discovery
+
+Finding the bucket names is half the battle. Harvest candidates from subdomains and
+crawled URLs, filter for S3, then check each:
+
+```bash
+# Feed discovered hosts/URLs into an S3 checker
+subfinder -d target.com | grep -i s3 | s3scan
+amass enum -d target.com | grep s3 | s3scan
+echo target.com | waybackurls | grep s3 | s3scan
+
+# Direct bucket-name checks (inline / from a file)
+echo "my-test-bucket" | s3scan
+cat buckets.txt | s3scan
+```
+
+Dedicated brute/permutation tools generate likely names from the org and test ACLs:
+
+```text
+CloudBrute        # multi-cloud storage brute (github.com/0xsha/CloudBrute)
+S3Scanner         # enumerate + dump open buckets (github.com/sa7mon/S3Scanner)
+AWSBucketDump     # wordlist-driven bucket hunter + interesting-file grep
+bucky / s3tk      # bucket security scanners
+```
+
+!!! tip "Region matters for the raw endpoint"
+    A bucket answers on its region's virtual-host URL. When
+    `bucket.s3.amazonaws.com` misbehaves, try the regional forms —
+    `s3-eu-west-1.amazonaws.com`, `s3-us-west-2.amazonaws.com`,
+    `s3-ap-southeast-1.amazonaws.com`, etc. The HTTP status
+    (200 / 403 / `NoSuchBucket`) already leaks existence and readability.
+
+## :material-graph: IAM graph & policy analysis
+
+Once you can read IAM, map privesc paths offline instead of guessing:
+
+```text
+PMapper        # graphs identities/edges, queries "who can reach admin" (nccgroup)
+cloudsplaining # flags risky/over-permissive policies from account authz details
+awspx          # BloodHound-style AWS attack-path graph (needs read privs)
+```
+
+Background references: [hackingthe.cloud](https://hackingthe.cloud/) for
+technique write-ups.
+
 ## :material-link-variant: Related
 
 - Arrived here via [SSRF](../web/ssrf.md)? That's the classic entry.

@@ -65,6 +65,21 @@ theHarvester -d company.com -b all
 Report **rates**, not names: sent, opened, clicked, credential-submitted, reported.
 Give the blue team detection gaps (did the phishing email/domain get flagged?).
 
+## :material-school: Courses & further reading
+
+Physical and human-layer testing is the part of the job you cannot practise in a
+lab, so structured material is worth more here than elsewhere.
+
+- [Social Engineering for Absolute Beginners](https://www.udemy.com/course/social-engineering-for-absolute-beginners/) — pretexting and the basics
+- [Social Engineering Expert Full Course](https://www.udemy.com/course/social-engineering-expert-full-course/) — the longer treatment
+- [Top phishing techniques](https://blog.redteamguides.com/p/top-phishing-techniques) — RedTeam Guides
+
+!!! warning "The rules are different when there's a human on the other end"
+    Get the pretext, the target list, the escalation contact and the stop
+    conditions **in writing** before a single message goes out — and carry an
+    authorisation letter for anything on-site. A social-engineering engagement
+    without a get-out-of-jail letter is not an engagement.
+
 ## :material-link-variant: Related
 
 - Delivery leads to [C2 Frameworks](c2.md); harvested creds → [Password Spraying](../network/password-spraying.md).

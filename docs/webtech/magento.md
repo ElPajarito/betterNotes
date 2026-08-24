@@ -37,11 +37,6 @@ magescan scan:all http://$TARGET
     PHP-ish directives), or abuse the import/customisation flow for a webshell.
     Customer + order data (PII, partial card data) is the loot.
 
-## :material-shield-check: Remediation
-
-- Patch promptly (Magento RCEs are wormed for Magecart); strong admin creds + 2FA;
-  custom admin path + IP allowlist; file-integrity monitoring for skimmers.
-
 ## :material-link-variant: Related
 
 - Fingerprinted at [Web Technologies](index.md) / [Ports](../network/ports.md).

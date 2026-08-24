@@ -93,6 +93,123 @@ JSON Web Tokens are `header.payload.signature`, base64url-encoded. Common flaws:
 - **Password reset via parameter pollution**: `email=victim@x.com&email=attacker@x.com`.
 - **Race conditions** on single-use tokens.
 
+## :material-account-clock: Session management flaws
+
+*From "A Practical Guide to Authentication and Session Management Vulnerabilities" by [coffinxp](https://medium.com/@coffinxp).*
+
+Session handling is pure logic, so scanners walk straight past it. Tooling for the whole checklist below: two browsers (or one + incognito), a cookie editor such as **EditThisCookie**, and Burp Repeater.
+
+### Old session survives a password change
+
+Log in to `$TARGET` on two browsers, change the password from browser A, then refresh browser B. Still authenticated → a hijacked session outlives the victim's attempt to lock the attacker out.
+
+### Session not invalidated on logout
+
+The server never destroys the token; the browser just drops the cookie locally.
+
+- Log in, dump **all** session cookies with the cookie editor.
+- Click **Logout**.
+- Paste the saved cookies back and refresh.
+- Back in without credentials → the token is still valid server-side.
+
+Stolen cookies (XSS, sniffing) then work forever regardless of how often the victim logs out.
+
+### Browser cache / back-button weakness
+
+Authenticated pages must ship `no-store, no-cache` in `Cache-Control`.
+
+- Log in, browse the sensitive pages (Profile, Settings, Payments).
+- Log out.
+- Hit the browser's **Back** button (`Alt + ←`).
+- Private data renders (or the cached page still looks authenticated) → reportable, and nasty on shared machines.
+
+### Email verification bypass (logic flaw)
+
+The app flips the "verified" flag on the wrong trigger — the current address inherits a confirmation it never earned.
+
+- Register with **Email A**, leave its verification link unclicked.
+- Log in, change the address to **Email B**; verify the link that arrives at B.
+- Change the address back to **Email A**.
+- Email A now shows as verified without its own link ever being clicked.
+
+That is enough to "own" an address you don't control, e.g. `admin@company.com`, and slip past domain-gated features.
+
+### Email verification swap
+
+A link minted for one address validates a different one.
+
+- Register with **Email A** (yours), don't click the link.
+- Change the account's address to **Email B** (the victim's).
+- Open the inbox for A and click the original link.
+- Email B comes back verified → you just confirmed an address you don't own.
+
+Feeds pre-account-takeover and lets you push "confirmed account" mail at a victim.
+
+### Password-reset token persists across requests
+
+Requesting a fresh link should kill the previous one.
+
+- Request reset **Link 1**, don't use it.
+- Request reset **Link 2**.
+- Go back and use **Link 1**.
+- Still works → old links stay live in mailboxes, backups and history as permanent backdoors.
+
+### Password-reset token re-use
+
+- Request a link and actually complete the reset with it.
+- Log in, then load the exact same link again.
+- If it lets you set a password a second time, the token was never burned — anyone with access to that URL later owns the account.
+
+### Missing session validation on sensitive endpoints
+
+The endpoint checks that a session cookie *exists*, never that it is still active.
+
+- Log in, edit a profile field but don't save.
+- Proxy on, click **Save**, capture the request → **Repeater**, then **drop** it in Proxy.
+- Log out in the browser.
+- Tamper with the parameters in Repeater and send.
+- `200 OK` plus a real data change → the session was never validated, so email/password changes still land after logout.
+
+### Session fixation
+
+- Note the pre-auth session cookie on the login page, e.g. `PHPSESSID=XYZ123`.
+- Log in with valid credentials.
+- Read the cookie again — unchanged `XYZ123` means no rotation on authentication.
+
+Plant the ID on a victim first (link, subdomain cookie injection) and you're inside their account the moment they log in.
+
+### Concurrent session limit bypass
+
+- Log in on browser A, then browser B; check whether A gets kicked.
+- No cap? Fire ~50 logins through Burp Intruder and count how many live sessions you end up with.
+
+Usually low severity on its own, but it defeats impossible-travel/fraud detection and lets an attacker sit in the account beside the real user.
+
+### No session rotation after a privilege change
+
+- Log in as a low-privilege user, note the session ID.
+- Trigger a privilege gain: plan upgrade, joining an org, enabling 2FA, accepting an admin invite.
+- Compare the session ID.
+
+Unchanged → a session stolen *before* the upgrade silently inherits the new privileges with no re-auth.
+
+### Unrestricted session duration
+
+- Capture a session cookie, then leave it idle for hours or days.
+- Replay it byte-for-byte in Burp or paste it back into the browser.
+- Still valid → the backend never expires it regardless of the cookie's own `Expires`, so a leaked cookie is a long-term key.
+
+### Weak "Remember me" token
+
+- Log in with **Stay logged in** enabled and note the remember-me cookie.
+- Log out, paste the cookie back, refresh.
+- Logged in again → the token is static, survives logout, and often survives password changes too.
+
+### JWT not revoked on logout
+
+!!! bug "Stateless sessions rot silently"
+    Capture your JWT, log out, then replay the same token in Repeater/Postman. A `200` means the server keeps no denylist — the token is a permanent credential until it expires on its own. See [JWT](jwt.md) for forging on top of that.
+
 ## :material-account-multiple-check: Logic & MFA bypasses
 
 - Response manipulation: change `{"mfa":true}` → `{"mfa":false}` in the response.
@@ -105,13 +222,6 @@ JSON Web Tokens are `header.payload.signature`, base64url-encoded. Common flaws:
     ```json
     {"user":"me","pass":"x","role":"admin","isVerified":true}
     ```
-
-## :material-shield-check: Remediation
-
-- Enforce object-level authorization on **every** request, server-side.
-- Sign JWTs with strong asymmetric keys; pin the `alg`; reject `none`.
-- Reset tokens: high-entropy, single-use, short-lived, and never trust the Host header.
-- Rate-limit auth endpoints and OTP verification.
 
 ## :material-link-variant: Related
 

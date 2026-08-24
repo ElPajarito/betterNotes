@@ -159,13 +159,6 @@ sudo ntpdate 10.10.10.5   # or: faketime, rdate
     Set a realistic `-duration`, prefer AES keys, and prefer Silver/Sapphire over
     Golden when you only need one service.
 
-## :material-shield-check: Remediation
-
-- Long (25+ char) managed passwords / gMSA for service accounts.
-- Require preauth; monitor 4768/4769/4624 for anomalies.
-- Remove unconstrained delegation; use gMSA + constrained where needed.
-- Rotate KRBTGT (twice) after any suspected DC compromise.
-
 ## :material-link-variant: Related
 
 - Needs a user list from [SMB](smb.md) RID cycling or [Recon](recon.md).

@@ -41,11 +41,6 @@ certipy auth -pfx administrator.pfx -dc-ip 10.10.10.5
 !!! loot "Certs don't expire on password change"
     A stolen/forged cert keeps authenticating even after the victim resets their password — durable, quiet persistence.
 
-## :material-shield-check: Remediation
-
-- Remove `ENROLLEE_SUPPLIES_SUBJECT` on auth templates; require manager approval.
-- Disable NTLM to AD CS web endpoints; audit template ACLs.
-
 ## :material-link-variant: Related
 
 - ESC8 pairs with [NTLM Relay](ntlm-relay.md); output feeds [Active Directory](active-directory.md) and [Kerberos](kerberos.md).

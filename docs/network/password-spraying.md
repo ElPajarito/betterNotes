@@ -40,10 +40,6 @@ Wait out the observation window between attempts (e.g. 1 try / 30 min).
 !!! loot "One hit unlocks the domain"
     A single valid low-priv credential enables LDAP enumeration, [Kerberoasting](kerberos.md), and [BloodHound](bloodhound.md) pathing.
 
-## :material-shield-check: Remediation
-
-- MFA everywhere; ban weak/seasonal passwords; smart lockout + alerting on spray patterns.
-
 ## :material-link-variant: Related
 
 - Feeds [Kerberos](kerberos.md) roasting and [BloodHound](bloodhound.md) analysis.

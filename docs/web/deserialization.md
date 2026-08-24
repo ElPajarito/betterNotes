@@ -85,13 +85,6 @@ ysoserial.exe -p ViewState -g TextFormattingRunProperties -c "cmd" \
 
 Ruby: YAML `!ruby/object` payloads; Node: `node-serialize` `_$$ND_FUNC$$_` immediately-invoked functions.
 
-## :material-shield-check: Remediation
-
-- Don't deserialize untrusted data. If you must, use **data-only formats** (JSON) with strict schemas.
-- Use allowlists of permitted classes / `ObjectInputFilter` (Java), `pickle` → avoid entirely.
-- Sign & verify serialized blobs (ViewState MAC, HMAC on cookies).
-- Keep gadget-bearing libraries patched and minimal.
-
 ## :material-link-variant: Related
 
 - Another road to RCE alongside [File Upload](file-upload.md) and [SQLi](sqli.md).

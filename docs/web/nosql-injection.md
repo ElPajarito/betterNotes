@@ -52,11 +52,6 @@ Server-side JS evaluation is the jackpot:
 !!! opsec "Regex is expensive"
     `$regex`/`$where` brute force fires thousands of queries and can lock a DB CPU — throttle on real targets.
 
-## :material-shield-check: Remediation
-
-- Cast input to the expected type before querying; reject objects where a string is expected.
-- Disable server-side JS (`--noscripting` in Mongo); never use `$where` with user data.
-
 ## :material-link-variant: Related
 
 - Same mindset as [SQL Injection](sqli.md); different syntax.

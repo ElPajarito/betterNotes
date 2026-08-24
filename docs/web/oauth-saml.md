@@ -33,11 +33,6 @@ Federated login (OAuth 2.0, OIDC, SAML SSO) moves trust to a third party. Sloppy
 !!! tip "Tools"
     Burp **SAML Raider** for XSW/signature stripping; **EsPReSSO** to spot SSO flows.
 
-## :material-shield-check: Remediation
-
-- Exact-match `redirect_uri`; require `state` and PKCE.
-- Enforce signature validation on the whole SAML response; disable DTDs.
-
 ## :material-link-variant: Related
 
 - Tokens often ride as [JWT](jwt.md); assertions parse XML → [XXE](xxe.md).

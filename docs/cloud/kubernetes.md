@@ -35,11 +35,6 @@ env | grep KUBERNETES                          # API server address
 !!! loot "Where the keys live"
     `kubectl get secrets -A`, cloud IAM creds via the node metadata endpoint, and etcd (if reachable) = full cluster loot.
 
-## :material-shield-check: Remediation
-
-- Least-privilege RBAC; `automountServiceAccountToken: false` where unused.
-- Pod Security admission (no privileged/hostPath); network policies between namespaces.
-
 ## :material-link-variant: Related
 
 - Node metadata theft mirrors [SSRF](../web/ssrf.md) → cloud IAM ([AWS](aws.md)).

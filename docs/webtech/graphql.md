@@ -73,11 +73,6 @@ clairvoyance http://$TARGET/graphql -o schema.json -w graphql-wordlist.txt
     weaponises these suggestion errors to rebuild the schema without introspection.
     If even suggestions are disabled, grep the front-end JS for operation names.
 
-## :material-shield-check: Remediation
-
-- Disable introspection **and** field suggestions in production; don't ship
-  GraphiQL/Playground; require auth on the endpoint.
-
 ## :material-link-variant: Related
 
 - Now attack it → [GraphQL Attacks](../web/graphql.md) (IDOR, batching, DoS).

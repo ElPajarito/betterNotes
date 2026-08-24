@@ -53,11 +53,6 @@ sudo LD_PRELOAD=/tmp/x.so someprog       # x.so runs setuid(0);system("sh")
 !!! opsec "Leaves a shell trail"
     Root shells from odd parents (vim→sh) are easy to spot in process auditing.
 
-## :material-shield-check: Remediation
-
-- Strip unnecessary SUID bits and capabilities; scope sudo rules tightly (no shells/editors).
-- Avoid `env_keep` for `LD_*`.
-
 ## :material-link-variant: Related
 
 - The bread-and-butter of [Linux Privesc](linux.md); pairs with [Credential Hunting](credential-hunting.md).

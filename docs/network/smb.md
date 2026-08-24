@@ -98,12 +98,6 @@ nxc smb 10.10.10.5 -u administrator -H <NTLM_HASH>
 - **SMBGhost (CVE-2020-0796)** — SMBv3 compression overflow.
 - **PrintNightmare / PetitPotam** — coerce auth (feeds relay attacks).
 
-## :material-shield-check: Remediation
-
-- Disable SMBv1; require SMB signing (blocks relay).
-- Kill null sessions; restrict anonymous enumeration.
-- LAPS for unique local admin passwords (kills pass-the-hash reuse).
-
 ## :material-link-variant: Related
 
 - Feeds [Kerberos](kerberos.md) roasting and [Active Directory](active-directory.md) attack paths.

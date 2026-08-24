@@ -47,11 +47,6 @@ trufflehog gitlab --endpoint http://$TARGET --token $TOK
 gitleaks detect --source ./repo
 ```
 
-## :material-shield-check: Remediation
-
-- Patch aggressively (GitLab CVEs are frequent + severe); disable open
-  registration; scope CI variables; enforce 2FA.
-
 ## :material-link-variant: Related
 
 - Fingerprinted at [Web Technologies](index.md) / [Ports](../network/ports.md).

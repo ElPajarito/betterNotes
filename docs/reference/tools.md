@@ -56,8 +56,8 @@ for X" lookup. Deep usage lives in the linked notes.
 
 | Tool | Job | Note |
 | --- | --- | --- |
-| `jadx` / `apktool` | APK decompile / rebuild | [Android](../mobile/android.md) |
-| `Frida` / `Objection` | Runtime instrumentation | [Android](../mobile/android.md) · [iOS](../mobile/ios.md) |
+| `jadx` / `apktool` | APK decompile / rebuild | [Android](../mobile/android/index.md) |
+| `Frida` / `Objection` | Runtime instrumentation | [Android](../mobile/android/index.md) · [iOS](../mobile/ios.md) |
 | `frida-ios-dump` | Decrypt iOS IPA | [iOS](../mobile/ios.md) |
 
 !!! tip "Install once, standardize"

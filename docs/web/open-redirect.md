@@ -29,11 +29,6 @@ A redirect that sends users wherever a parameter says. Low severity alone, but a
 - **OAuth theft** — a redirect chained into a loose `redirect_uri` leaks the `code`/token → see [OAuth & SAML](oauth-saml.md).
 - **SSRF allowlist bypass** — server follows the redirect to an internal host → see [SSRF](ssrf.md).
 
-## :material-shield-check: Remediation
-
-- Redirect only to a server-side allowlist or relative paths; never trust the raw parameter.
-- If external redirects are needed, show an interstitial "you are leaving" page.
-
 ## :material-link-variant: Related
 
 - Amplifies [OAuth & SAML](oauth-saml.md) and [SSRF](ssrf.md).

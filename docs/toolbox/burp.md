@@ -58,6 +58,36 @@ InQL                # GraphQL introspection + query building
     Intruder is throttled in Community — **Turbo Intruder** (free extension) sidesteps
     that and is better for [race conditions](../web/race-conditions.md) anyway.
 
+## :material-store: Useful Burp extensions
+
+More from the BApp Store / GitHub, grouped by what they buy you:
+
+```text
+# Discovery & passive
+Software Vulnerability Scanner  # flags vulnerable software versions passively
+GAP (Get All Parameters)        # pulls params + endpoints from responses
+Reflector                       # passive reflected-XSS finder
+Cookie decrypter                # decode/decrypt Netscaler, F5 BigIP, Flask cookies
+
+# Active checks
+Active Scan++                   # extra active + passive scan coverage
+J2EEScan                        # J2EE-specific vulnerability checks
+Upload Scanner                  # exercises multiple file-upload vulns
+Web Cache Deception Scanner     # active WCD detection
+XSSValidator                    # Intruder XSS payload generator + validator
+ssrf-king                       # automates SSRF detection
+Burp Bounty (Pro)               # customizable pattern-based active/passive checks
+
+# Tech-specific helpers
+.NET Beautifier                 # readable view of the VIEWSTATE parameter
+Wsdler                          # generates SOAP requests from a WSDL (god tier)
+Bypass WAF                      # injects headers that slip past some WAFs
+Backslash / Agartha             # injection/path/priv-esc payload tooling
+```
+
+!!! tip "Companion CLI tools"
+    Pair Burp with standalone tools: [viewgen](https://github.com/0xacb/viewgen) (forge/decode ASP.NET `__VIEWSTATE`), [GitDump](https://github.com/Ebryx/GitDump) (reconstruct source from an exposed `.git`), [JSA](https://github.com/w9w/JSA) (JS endpoint/secret analysis), [loxs](https://github.com/coffinxp/loxs) (LFI/OR/SSTI/XSS scanning), [CF-Hero](https://github.com/musana/CF-Hero) (uncover real IPs behind Cloudflare).
+
 ## :material-link-variant: Related
 
 - The proxy behind all of [Web Apps](../web/index.md); checklist → [Web Pentest Checklist](../checklists/web.md).

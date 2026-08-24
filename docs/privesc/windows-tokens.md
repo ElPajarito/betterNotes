@@ -44,11 +44,6 @@ reg save HKLM\SYSTEM system.hive
 !!! loot "Hashes = lateral movement"
     Local admin hash → pass-the-hash across the estate; SYSTEM → LSASS dump for domain creds.
 
-## :material-shield-check: Remediation
-
-- Don't grant service accounts impersonation unless required; use gMSA.
-- Restrict backup/restore/debug privileges to genuine admins.
-
 ## :material-link-variant: Related
 
 - Core of [Windows Privesc](windows.md); dumped hashes → [Active Directory](../network/active-directory.md).

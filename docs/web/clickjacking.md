@@ -31,11 +31,6 @@ Tune `top/left` until the invisible "Delete" button sits under the lure.
 - **Multi-step** framing to walk the victim through a wizard.
 - Bypass frame-busting JS with the iframe `sandbox` attribute (blocks `top.location`).
 
-## :material-shield-check: Remediation
-
-- `Content-Security-Policy: frame-ancestors 'none'` (or an allowlist).
-- Legacy `X-Frame-Options: DENY`; add `SameSite` cookies so framed requests aren't authenticated.
-
 ## :material-link-variant: Related
 
 - Higher impact when combined with [CSRF](csrf.md) on the same action.
