@@ -3,7 +3,7 @@ tags:
   - Web
 ---
 
-# :material-gitlab: GitLab
+# :material-github: GitLab
 
 <span class="pill pill-hard">source + creds</span> <span class="pill pill-info">web</span>
 

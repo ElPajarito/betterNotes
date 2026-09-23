@@ -326,6 +326,7 @@ nav:
       - Fixing Things:
           - Troubleshooting: toolbox/troubleshooting.md
           - Bash Tips & Shortcuts: toolbox/bash.md
+          - Git tips : toolbox/git.md 
       - Tags: tags.md
   - RnD:
       - rnd/index.md
