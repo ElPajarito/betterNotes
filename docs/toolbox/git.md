@@ -14,7 +14,7 @@ tags:
 gh auth login                                        # login via gh
 gh auth status                                       # check if logged in
 
-git -C /path/to/repo                                 # Make it so you can commit normally without creds
+git remote set-url origin https://github.com/ElPajarito/repo_name.git    # Make it so you can commit normally without creds
 ```
 
 
