@@ -3,10 +3,9 @@ tags:
   - Reference
 ---
 
+<span class="pill pill-info">Certs</span>
+
 # :material-school: Certification Roadmaps
-
-<span class="pill pill-info">opinionated</span> 
-
 
 ## :material-target-account: Cert flowchart
 

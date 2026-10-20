@@ -5,18 +5,21 @@ tags:
 
 # :material-bookmark-multiple: Cool Blogs & Write-ups
 
-<span class="pill pill-info">reading list</span> <span class="pill pill-medium">my notes</span>
-
-My own reading list, kept as written — ratings, verdicts and all.
+<span class="pill pill-info">reading list</span>
 
 !!! tip "Desbloquear medium de graça"
     [https://freedium-mirror.cfd](https://freedium-mirror.cfd) →
-    prefix any Medium URL with [https://freedium.cfd/](https://freedium.cfd/) ou
+    prefix any Medium URL with [https://freedium.cfd/](https://freedium.cfd/) or
     [https://readmedium.com/en/](https://readmedium.com/en/)
 
     ```
     https://freedium-mirror.cfd/
     ```
+
+
+
+
+
 
 ## :material-heart: Cool write-ups 🫶
 
@@ -24,21 +27,10 @@ My own reading list, kept as written — ratings, verdicts and all.
 
 WP2shell RCE 10/10 ^
 
-### :material-robot: AI finding the bugs
 
-<https://starlabs.sg/blog/2026/07-when-ai-makes-0-days-feel-like-n-days>
- ^ When AI makes 0-days feel like n-days
+## :material-glasses: Haven't read 
+[https://fortbridge.co.uk/research/cve-2026-108097-deep-dive-turning-a-drupal-field-ui-callback-into-rce/](https://fortbridge.co.uk/research/cve-2026-108097-deep-dive-turning-a-drupal-field-ui-callback-into-rce/) Drupal callback to RCE ?
 
-<https://portswigger.net/blog/can-ai-invent-new-attack-techniques-new-research-from-james-kettle-and-portswigger-research>
- ^ James Kettle / PortSwigger — can AI invent *new* attack techniques (HTTP terminator)
-
-<https://www.peterhendy.dev/blog/my_first_ai_bug_bounty>
- ^ First AI bug bounty — what the workflow actually looked like
-
-<https://portfolio.m4xx.cfd/read/blogs/2026-05-27-deepseek-claude-code-complete-guide>
- ^ DeepSeek + Claude Code, complete guide
-
-### Haven't read
 
 [https://whoareme.com/blog/cspt-account-takeover-2fa-bypass/](https://whoareme.com/blog/cspt-account-takeover-2fa-bypass/)    Takeover +2fa bypass muito pica
 
@@ -55,6 +47,22 @@ Predicatable random numbers +Logout csrf + Login CSRF  : 9/10
 [https://blog.salucci.ch/docs/HackingLab/TryHackMe/xss-with-a-jpgjpeg-to-bypass-csp/](https://blog.salucci.ch/docs/HackingLab/TryHackMe/xss-with-a-jpgjpeg-to-bypass-csp/)
 
 [https://flare.io/learn/resources/blog/top-cybercrime-forums/](https://flare.io/learn/resources/blog/top-cybercrime-forums/)
+
+
+
+### :material-robot: AI finding the bugs
+
+<https://starlabs.sg/blog/2026/07-when-ai-makes-0-days-feel-like-n-days>
+ ^ When AI makes 0-days feel like n-days
+
+<https://portswigger.net/blog/can-ai-invent-new-attack-techniques-new-research-from-james-kettle-and-portswigger-research>
+ ^ James Kettle / PortSwigger — can AI invent *new* attack techniques (HTTP terminator)
+
+<https://www.peterhendy.dev/blog/my_first_ai_bug_bounty>
+ ^ First AI bug bounty — what the workflow actually looked like
+
+<https://portfolio.m4xx.cfd/read/blogs/2026-05-27-deepseek-claude-code-complete-guide>
+ ^ DeepSeek + Claude Code, complete guide
 
 ### Already read   — — — — —
 
